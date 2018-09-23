@@ -25,6 +25,13 @@ repositories {
     mavenCentral()
 }
 
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
 configurations.all {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
