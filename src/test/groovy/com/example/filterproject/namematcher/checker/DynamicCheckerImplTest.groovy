@@ -103,7 +103,7 @@ class DynamicCheckerImplTest extends Specification {
         System.out.println(result)
 
         then:
-        assert result.nameMatch > 75
+        assert result.addressMatch > 75
     }
 
     def "DynamicChecker with equals objects"() {
