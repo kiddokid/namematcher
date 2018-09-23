@@ -4,7 +4,9 @@ import com.example.filterproject.namematcher.checker.DynamicCheckerImpl
 import com.example.filterproject.namematcher.model.CheckResult
 import com.example.filterproject.namematcher.model.RiskCustomer
 import spock.lang.Specification
+import spock.lang.Unroll
 
+@Unroll
 class DynamicCheckerImplTest extends Specification {
 
     private DynamicCheckerImpl dynamicChecker
@@ -77,7 +79,7 @@ class DynamicCheckerImplTest extends Specification {
         assert result.nameMatch < 50
     }
 
-    def "CheckAddressGroup with different objects"() {
+    def "CheckAddressGroup with different but similar objects"() {
         given:
         RiskCustomer inputCustomer = RiskCustomer.builder()
                 .address1("address2")
@@ -89,6 +91,7 @@ class DynamicCheckerImplTest extends Specification {
 
         RiskCustomer foundCustomer = RiskCustomer.builder()
                 .address1("address1")
+                .address2("address2")
                 .region_state("FL")
                 .zip("12234")
                 .city("City")
@@ -100,7 +103,7 @@ class DynamicCheckerImplTest extends Specification {
         System.out.println(result)
 
         then:
-        assert result.nameMatch < 50
+        assert result.nameMatch > 75
     }
 
     def "DynamicChecker with equals objects"() {
