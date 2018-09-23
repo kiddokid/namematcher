@@ -1,0 +1,5 @@
+checker:
+  dynamic:
+    thresholds:
+      total: 80.0
+      address: 80.0
