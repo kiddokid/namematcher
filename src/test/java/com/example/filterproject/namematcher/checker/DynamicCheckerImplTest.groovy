@@ -133,7 +133,7 @@ class DynamicCheckerImplTest extends Specification {
 
         then:
         assert result.addressMatch > 99
-        assert result.nameMatch > 99
+        assert result.nameMatch < 99
         assert result.totalMatch > 99
     }
 }
