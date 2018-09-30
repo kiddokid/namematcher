@@ -2,9 +2,12 @@ package com.example.filterproject.namematcher.checker;
 
 import com.example.filterproject.namematcher.model.CheckResult;
 import com.example.filterproject.namematcher.model.RiskCustomer;
+import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
 import org.apache.commons.text.similarity.JaroWinklerDistance;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -13,14 +16,19 @@ import static java.util.Objects.nonNull;
 
 @Component
 @Slf4j
+@Getter
 public class DynamicCheckerImpl implements CustomerChecker {
 
-    private JaroWinklerDistance jaroWinklerDistance = new JaroWinklerDistance();
+    private Double totalThreshold = 80.0;
+    private Double addressThreshold = 80.0;
+
     private Integer notNullCount = 0;
     private Double totalResult = 0.0;
     private Double nameCoeff = 0.0;
     private Double addressCoeff = 0.0;
     private Double totalCoeff = 0.0;
+
+    private JaroWinklerDistance jaroWinklerDistance = new JaroWinklerDistance();
 
     @Override
     public CheckResult apply(List<RiskCustomer> dbMatchList, RiskCustomer customerToCheck) {
@@ -33,7 +41,7 @@ public class DynamicCheckerImpl implements CustomerChecker {
         Double addressResult;
         Double nameResult;
         totalResult = 0.0;
-        log.info("[DYNAMIC-CHECKER] - Comparing userId - {} and userId - {}", foundCustomer.getId(), inputCustomer.getId());
+
         nameCoeff = calculateCoefficient(inputCustomer.getNameMap());
         addressCoeff = calculateCoefficient(inputCustomer.getAddressMap());
         totalCoeff = calculateCoefficient(inputCustomer.getAttributeMap());
@@ -43,7 +51,7 @@ public class DynamicCheckerImpl implements CustomerChecker {
         checkOthers(foundCustomer, inputCustomer);
 
         totalResult = Precision.round(totalResult, 2);
-        log.info("[DYNAMIC-CHECKER] - For userId - {} and userId - {} total result is {}", foundCustomer.getId(), inputCustomer.getId(), totalResult);
+        log.info("[DYNAMIC-CHECKER] - For userId - {} total result is {}", foundCustomer.getId(), totalResult, totalResult);
         return CheckResult.builder()
                 .addressMatch(addressResult)
                 .riskCustomer(inputCustomer)
@@ -104,4 +112,7 @@ public class DynamicCheckerImpl implements CustomerChecker {
         });
         return Precision.round((100.0 / notNullCount), 1);
     }
+
+
+
 }

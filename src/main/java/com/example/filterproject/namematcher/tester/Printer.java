@@ -29,7 +29,7 @@ public class Printer {
 //        List<RiskCustomer> riskCustomerList = riskCustomerRepository.searchSimilarCustomers("Dorian","Burke",
 //                "nbrunicke4@cbc.ca", "802 Darwin Circle", "802 Darwin Circle", "Mount Vernon", "TX", "12222");
 //        log.info("Test - {}", riskCustomerList.toString());
-        log.info("Trashgold {}", levenshteinDistance.getThreshold());
-        log.info("Test - {}", levenshteinDistance.apply("bigtest","testbig"));
+//        log.info("Trashgold {}", levenshteinDistance.getThreshold());
+//        log.info("Test - {}", levenshteinDistance.apply("bigtest","testbig"));
     }
 }

@@ -8,6 +8,7 @@ import com.example.filterproject.namematcher.model.RiskCustomer;
 import com.example.filterproject.namematcher.model.descision.DescisionName;
 import com.example.filterproject.namematcher.model.descision.ServiceDescision;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +16,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class NameMatcherService {
-
-    private Double totalThreshold = 80.0;
-    private Double addressThreshold = 80.0;
 
     private final CustomerChecker dynamicCheckerImpl;
     private final RiskCustomerRepository riskCustomerRepository;
@@ -37,6 +35,7 @@ public class NameMatcherService {
                 inputCustomer.getEmail(), inputCustomer.getAddress1(), inputCustomer.getAddress2(),
                 inputCustomer.getCity(), inputCustomer.getRegion_state(), inputCustomer.getZip());
 
+        log.info("[DYNAMIC-CHECKER] - Found {} possible matches", matchList.size());
         if (matchList.size() > 0) {
             CheckResult checkResult = dynamicCheckerImpl.apply(matchList, inputCustomer);
             return compareToThreshold(checkResult);
@@ -45,6 +44,8 @@ public class NameMatcherService {
     }
 
     private ServiceDescision compareToThreshold(CheckResult checkResult) {
+        Double totalThreshold = dynamicCheckerImpl.getTotalThreshold();
+        Double addressThreshold = dynamicCheckerImpl.getAddressThreshold();
         if (checkResult.getTotalMatch() >= totalThreshold) {
             return ServiceDescision.builder()
                     .checkResult(checkResult)

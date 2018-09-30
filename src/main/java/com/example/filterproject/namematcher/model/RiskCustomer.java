@@ -2,8 +2,10 @@ package com.example.filterproject.namematcher.model;
 
 import com.example.filterproject.namematcher.model.state.CustomerState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,9 +18,12 @@ import java.util.Map;
 @Table(name = "risk_persons")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RiskCustomer {
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -50,12 +55,14 @@ public class RiskCustomer {
     @NotNull(message = "is required")
     private String reason;
 
+    @JsonIgnore
     private String comment;
 
     @Email(message = "Invalid Email")
     @NotNull(message = "is required")
     private String email;
 
+    @JsonIgnore
     private Date timestamp;
 
     @Column(name = "rp_added_by_id")
@@ -63,8 +70,10 @@ public class RiskCustomer {
     private Long client;
 
     @Transient
+    @JsonIgnore
     private CustomerState customerState;
 
+    @JsonIgnore
     public Map<String, Object> getAttributeMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("firstName", firstName);
@@ -80,6 +89,7 @@ public class RiskCustomer {
         return map;
     }
 
+    @JsonIgnore
     public Map<String, Object> getNameMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("firstName", firstName);
@@ -88,6 +98,7 @@ public class RiskCustomer {
         return map;
     }
 
+    @JsonIgnore
     public Map<String, Object> getAddressMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("address1", address1);
@@ -99,6 +110,7 @@ public class RiskCustomer {
         return map;
     }
 
+    @JsonIgnore
     public Map<String, Object> getOthersMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("email", email);
