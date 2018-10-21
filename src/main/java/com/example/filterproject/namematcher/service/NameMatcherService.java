@@ -1,15 +1,12 @@
 package com.example.filterproject.namematcher.service;
 
 import com.example.filterproject.namematcher.checker.CustomerChecker;
-import com.example.filterproject.namematcher.checker.DynamicCheckerImpl;
-import com.example.filterproject.namematcher.dao.RiskCustomerRepository;
 import com.example.filterproject.namematcher.formatter.TextFormatter;
 import com.example.filterproject.namematcher.model.CheckResult;
 import com.example.filterproject.namematcher.model.RiskCustomer;
 import com.example.filterproject.namematcher.model.descision.DescisionName;
 import com.example.filterproject.namematcher.model.descision.ServiceDescision;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,15 +17,14 @@ public class NameMatcherService {
 
     private final TextFormatter textFormatter;
     private final CustomerChecker dynamicCheckerImpl;
-    private final RiskCustomerRepository riskCustomerRepository;
-
+    private final CustomerService customerService;
 
     public NameMatcherService(CustomerChecker dynamicCheckerImpl,
-                              RiskCustomerRepository riskCustomerRepository,
-                              TextFormatter textFormatter) {
+                              TextFormatter textFormatter,
+                              CustomerService customerService) {
         this.dynamicCheckerImpl = dynamicCheckerImpl;
-        this.riskCustomerRepository = riskCustomerRepository;
         this.textFormatter = textFormatter;
+        this.customerService = customerService;
     }
 
     public ServiceDescision process(RiskCustomer inputCustomer) {
@@ -36,10 +32,7 @@ public class NameMatcherService {
         ServiceDescision serviceDescision = ServiceDescision.builder().
                 descisionName(DescisionName.NEGATIVE)
                 .build();
-        List<RiskCustomer> matchList = riskCustomerRepository.searchSimilarCustomers(inputCustomer.getFirstName(), inputCustomer.getLastName(),
-                inputCustomer.getEmail(), inputCustomer.getAddress1(), inputCustomer.getAddress2(),
-                inputCustomer.getCity(), inputCustomer.getRegion_state(), inputCustomer.getZip());
-
+        List<RiskCustomer> matchList = customerService.findSimilarCustomers(inputCustomer);
         log.info("[DYNAMIC-CHECKER] - Found {} possible matches", matchList.size());
         if (matchList.size() > 0) {
             CheckResult checkResult = dynamicCheckerImpl.apply(matchList, inputCustomer);
