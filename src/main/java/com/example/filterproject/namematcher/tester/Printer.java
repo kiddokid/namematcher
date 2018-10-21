@@ -24,12 +24,6 @@ public class Printer {
 
     @Scheduled(fixedDelay = 3000)
     public void printText() {
-//        Long count = riskCustomerRepository.count();
-//        log.info("Print data from source {}", count);
-//        List<RiskCustomer> riskCustomerList = riskCustomerRepository.searchSimilarCustomers("Dorian","Burke",
-//                "nbrunicke4@cbc.ca", "802 Darwin Circle", "802 Darwin Circle", "Mount Vernon", "TX", "12222");
-//        log.info("Test - {}", riskCustomerList.toString());
-//        log.info("Trashgold {}", levenshteinDistance.getThreshold());
-//        log.info("Test - {}", levenshteinDistance.apply("bigtest","testbig"));
+
     }
 }

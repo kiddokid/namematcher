@@ -5,5 +5,6 @@ public enum CustomerStateName {
     REVIEW,
     FRAUD,
     DECLIEND,
-    FPF
+    FPF,
+    SANCTION
 }

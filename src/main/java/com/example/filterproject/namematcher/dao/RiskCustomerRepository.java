@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface RiskCustomerRepository extends JpaRepository<RiskCustomer, Long> {
 
-    RiskCustomer getRiskCustomerByClient(Long clientId);
+    RiskCustomer getRiskCustomerById(Long id);
 
     @Query("from RiskCustomer where lower(firstName) like :f_name or lower(lastName) like :l_name " +
             "or lower(email) like :email or lower(address1) like :address1 or lower(address2) like :address2 " +

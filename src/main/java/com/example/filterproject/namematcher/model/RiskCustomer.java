@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@Table(name = "risk_persons")
+@Table(name = "risk_customers", schema = "namematching")
 @Data
 @Builder
 @AllArgsConstructor
@@ -47,6 +47,7 @@ public class RiskCustomer {
     private String region_state;
 
     private String city;
+
     private String zip;
 
     @NotNull(message = "is required")
@@ -65,9 +66,9 @@ public class RiskCustomer {
     @JsonIgnore
     private Date timestamp;
 
-    @Column(name = "rp_added_by_id")
-    @JsonIgnore
-    private Long client;
+//    @Transient
+//    @JsonIgnore
+//    private Long client;
 
     @Transient
     @JsonIgnore

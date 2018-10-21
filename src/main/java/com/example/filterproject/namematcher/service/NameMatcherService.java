@@ -3,6 +3,7 @@ package com.example.filterproject.namematcher.service;
 import com.example.filterproject.namematcher.checker.CustomerChecker;
 import com.example.filterproject.namematcher.checker.DynamicCheckerImpl;
 import com.example.filterproject.namematcher.dao.RiskCustomerRepository;
+import com.example.filterproject.namematcher.formatter.TextFormatter;
 import com.example.filterproject.namematcher.model.CheckResult;
 import com.example.filterproject.namematcher.model.RiskCustomer;
 import com.example.filterproject.namematcher.model.descision.DescisionName;
@@ -17,17 +18,21 @@ import java.util.List;
 @Slf4j
 public class NameMatcherService {
 
+    private final TextFormatter textFormatter;
     private final CustomerChecker dynamicCheckerImpl;
     private final RiskCustomerRepository riskCustomerRepository;
 
 
     public NameMatcherService(CustomerChecker dynamicCheckerImpl,
-                              RiskCustomerRepository riskCustomerRepository) {
+                              RiskCustomerRepository riskCustomerRepository,
+                              TextFormatter textFormatter) {
         this.dynamicCheckerImpl = dynamicCheckerImpl;
         this.riskCustomerRepository = riskCustomerRepository;
+        this.textFormatter = textFormatter;
     }
 
     public ServiceDescision process(RiskCustomer inputCustomer) {
+        inputCustomer = textFormatter.process(inputCustomer);
         ServiceDescision serviceDescision = ServiceDescision.builder().
                 descisionName(DescisionName.NEGATIVE)
                 .build();
