@@ -5,6 +5,8 @@ import com.example.filterproject.namematcher.formatter.TextFormatter;
 import com.example.filterproject.namematcher.model.RiskCustomer;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerService {
 
@@ -24,5 +26,11 @@ public class CustomerService {
 
     public RiskCustomer get(Long id) {
         return riskCustomerRepository.getRiskCustomerById(id);
+    }
+
+    public List<RiskCustomer> findSimilarCustomers(RiskCustomer riskCustomer) {
+        return riskCustomerRepository.searchSimilarCustomers(riskCustomer.getFirstName(), riskCustomer.getLastName(),
+                riskCustomer.getEmail(), riskCustomer.getAddress1(), riskCustomer.getAddress2(), riskCustomer.getCity(),
+                riskCustomer.getRegion_state(), riskCustomer.getZip());
     }
 }

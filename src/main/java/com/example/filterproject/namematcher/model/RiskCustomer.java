@@ -66,9 +66,9 @@ public class RiskCustomer {
     @JsonIgnore
     private Date timestamp;
 
-//    @Transient
-//    @JsonIgnore
-//    private Long client;
+    @Transient
+    @JsonIgnore
+    private Long client;
 
     @Transient
     @JsonIgnore
