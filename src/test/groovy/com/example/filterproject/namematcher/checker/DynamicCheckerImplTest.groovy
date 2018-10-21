@@ -1,6 +1,5 @@
 package com.example.filterproject.namematcher.checker
 
-import com.example.filterproject.namematcher.checker.DynamicCheckerImpl
 import com.example.filterproject.namematcher.model.CheckResult
 import com.example.filterproject.namematcher.model.RiskCustomer
 import spock.lang.Specification
