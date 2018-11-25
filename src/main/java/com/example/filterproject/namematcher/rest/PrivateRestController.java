@@ -4,6 +4,7 @@ import com.example.filterproject.namematcher.model.RiskCustomer;
 import com.example.filterproject.namematcher.model.descision.ServiceDescision;
 import com.example.filterproject.namematcher.service.CustomerService;
 import com.example.filterproject.namematcher.service.NameMatcherService;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import java.util.Optional;
 @RequestMapping("/nm")
 @Slf4j
 public class PrivateRestController {
+
+    private static final Gson gson = new Gson();
 
     private final NameMatcherService matcherService;
     private final CustomerService customerService;
@@ -33,6 +36,7 @@ public class PrivateRestController {
                                         @RequestParam("address1") String address1, @RequestParam("address2") Optional<String> address2,
                                         @RequestParam("region_state") String region_state, @RequestParam("city") String city,
                                         @RequestParam("zip") String zip, @RequestParam("country") String country) {
+        log.info("Incoming Request");
         RiskCustomer riskCustomer = RiskCustomer.builder()
                 .firstName(firstName)
                 .lastName(lastName)
@@ -47,6 +51,13 @@ public class PrivateRestController {
                 .build();
         ServiceDescision serviceDescision = matcherService.process(riskCustomer);
         return new ResponseEntity(serviceDescision, HttpStatus.OK);
+    }
+
+    @PostMapping("/matchp")
+    public ResponseEntity<ServiceDescision> matchCustomerPost(@RequestBody RiskCustomer riskCustomer) {
+        ServiceDescision serviceDescision = matcherService.process(riskCustomer);
+        System.out.println(serviceDescision);
+        return new ResponseEntity<>(serviceDescision, HttpStatus.OK);
     }
 
     @Validated //TODO check this annotation
