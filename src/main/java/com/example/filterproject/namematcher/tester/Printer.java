@@ -1,6 +1,8 @@
 package com.example.filterproject.namematcher.tester;
 
 import com.example.filterproject.namematcher.dao.RiskCustomerRepository;
+import com.example.filterproject.namematcher.formatter.TextFormatter;
+import com.example.filterproject.namematcher.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,15 +13,22 @@ import org.springframework.stereotype.Component;
 public class Printer {
 
     private RiskCustomerRepository riskCustomerRepository;
-
+    private CustomerService customerService;
     private LevenshteinDistance levenshteinDistance = new LevenshteinDistance(9);
+    private TextFormatter textFormatter;
 
-    public Printer(RiskCustomerRepository riskCustomerRepository) {
+    private static Integer offset = 0;
+
+    public Printer(RiskCustomerRepository riskCustomerRepository,
+                   CustomerService customerService,
+                   TextFormatter textFormatter) {
         this.riskCustomerRepository = riskCustomerRepository;
+        this.customerService = customerService;
+        this.textFormatter = textFormatter;
     }
 
-    @Scheduled(fixedDelay = 3000)
+    @Scheduled(fixedDelay = 10000)
     public void printText() {
-
+        //customerService.
     }
 }

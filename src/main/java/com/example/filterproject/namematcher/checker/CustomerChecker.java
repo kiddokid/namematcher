@@ -9,6 +9,8 @@ public interface CustomerChecker {
 
     CheckResult apply(List<RiskCustomer> dbMatchList, RiskCustomer customerToCheck);
 
+    CheckResult apply(RiskCustomer dbMatchList, RiskCustomer customerToCheck);
+
     Double getTotalThreshold();
 
     Double getAddressThreshold();

@@ -19,8 +19,8 @@ import static java.util.Objects.nonNull;
 @Getter
 public class DynamicCheckerImpl implements CustomerChecker {
 
-    private Double totalThreshold = 80.0;
-    private Double addressThreshold = 80.0;
+    private Double totalThreshold = 40.0;
+    private Double addressThreshold = 40.0;
 
     private Integer notNullCount = 0;
     private Double totalResult = 0.0;
@@ -37,7 +37,8 @@ public class DynamicCheckerImpl implements CustomerChecker {
         return Collections.max(checkResultList, Comparator.comparing(CheckResult::getTotalMatch));
     }
 
-    protected CheckResult apply(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
+    @Override
+    public CheckResult apply(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
         Double addressResult;
         Double nameResult;
         totalResult = 0.0;

@@ -19,4 +19,7 @@ public interface RiskCustomerRepository extends JpaRepository<RiskCustomer, Long
                                               @Param("address2") String address2, @Param("city") String city,
                                               @Param("state") String state, @Param("zip") String zip);
 
+    @Query(value = "select * from namematching.risk_customers limit :batchSize", nativeQuery = true)
+    List<RiskCustomer> getCustomersInBatch(@Param("batchSize")Integer batchSize);
+
 }

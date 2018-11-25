@@ -3,11 +3,13 @@ package com.example.filterproject.namematcher.service;
 import com.example.filterproject.namematcher.dao.RiskCustomerRepository;
 import com.example.filterproject.namematcher.formatter.TextFormatter;
 import com.example.filterproject.namematcher.model.RiskCustomer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class CustomerService {
 
     private final RiskCustomerRepository riskCustomerRepository;
@@ -19,9 +21,9 @@ public class CustomerService {
         this.textFormatter = textFormatter;
     }
 
-    public void save(RiskCustomer riskCustomer) {
-        //TODO ADD STATE MACHINE BASE STATE
-        riskCustomerRepository.save(riskCustomer);
+    public Long save(RiskCustomer riskCustomer) {
+        //ADD STATE MACHINE BASE STATE
+        return riskCustomerRepository.save(riskCustomer).getId();
     }
 
     public RiskCustomer get(Long id) {
