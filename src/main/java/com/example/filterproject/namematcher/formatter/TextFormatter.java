@@ -14,7 +14,6 @@ import static java.util.Objects.nonNull;
 @Component
 @Slf4j
 public class TextFormatter {
-    //TODO: class that filter @RiskCustomer fields. Susbstituting wrong symbols to unicode, clearing email, addresses
 
     public RiskCustomer process(RiskCustomer riskCustomer) {
         RiskCustomer result = riskCustomer;
