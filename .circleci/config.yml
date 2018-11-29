@@ -27,7 +27,9 @@ jobs:
           - gradle-{{ checksum "build.gradle" }}
           # fallback to using the latest cache if no exact match is found
           - gradle-
-
+      - run:
+          name: chmod permissions
+          command: chmod +x ./gradlew
       - run: ./gradlew build --info
 
       - save_cache:
