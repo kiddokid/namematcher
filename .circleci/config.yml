@@ -30,7 +30,7 @@ jobs:
       - run:
           name: chmod permissions
           command: chmod +x ./gradlew
-      - run: ./gradlew build --info
+      - run: ./gradlew dependencies --info
 
       - save_cache:
           paths:
@@ -38,4 +38,4 @@ jobs:
           key: gradle-{{ checksum "build.gradle" }}
 
       # run tests!
-      - run: gradle test
+      - run: ./gradlew test --info
