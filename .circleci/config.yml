@@ -28,7 +28,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: ./gradlew clean dependencies --info
+      - run: gradle clean dependencies --info
 
       - save_cache:
           paths:
