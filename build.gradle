@@ -84,4 +84,7 @@ dependencies {
     compile group: 'org.testcontainers', name: 'postgresql', version: '1.9.1'
 // https://mvnrepository.com/artifact/org.testcontainers/spock
     compile group: 'org.testcontainers', name: 'spock', version: '1.9.1'
+    // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+    compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.3'
+
 }

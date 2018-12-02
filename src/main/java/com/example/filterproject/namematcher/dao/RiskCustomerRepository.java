@@ -22,4 +22,8 @@ public interface RiskCustomerRepository extends JpaRepository<RiskCustomer, Long
     @Query(value = "select * from namematching.risk_customers limit :batchSize", nativeQuery = true)
     List<RiskCustomer> getCustomersInBatch(@Param("batchSize")Integer batchSize);
 
+    @Query(value = "SELECT * from namematching.risk_customers " +
+            "where country in ('UA', 'RU', 'MD', 'BL') " +
+            "AND id not in (select riskcustomerid from namematching.vkuser)", nativeQuery = true)
+    List<RiskCustomer> getEastEuropeanCustomersWithoutVk();
 }
