@@ -31,7 +31,7 @@ public class Printer {
         this.vkTest = vkTest;
     }
 
-    @Scheduled(fixedDelay = 10000)
+
     public void printText() {
        vkTest.process();
     }

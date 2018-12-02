@@ -1,8 +1,8 @@
 CREATE SCHEMA IF NOT  EXISTS namematching;
-create sequence namematching.risk_customers_id_seq
+create sequence if not exists namematching.risk_customers_id_seq
 ;
 
-create sequence namematching.vkusers_id_seq
+create sequence if not exists namematching.vkusers_id_seq
 ;
 
 create table if not exists namematching.risk_customers

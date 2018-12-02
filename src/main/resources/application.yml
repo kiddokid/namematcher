@@ -11,5 +11,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  flyway:
+    schemas: namematching
+    baseline-on-migrate: true
 server:
   port: 8080

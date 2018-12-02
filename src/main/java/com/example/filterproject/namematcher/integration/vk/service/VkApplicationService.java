@@ -86,7 +86,7 @@ public class VkApplicationService {
         } catch (ClientException | ApiException e) {
             e.printStackTrace();
         }
-        if (nonNull(getCitiesResponse.getItems()))
+        if (nonNull(getCitiesResponse.getItems()) && getCitiesResponse.getItems().size() > 0 )
             result = getCitiesResponse.getItems().get(0).getId();
         return result;
     }

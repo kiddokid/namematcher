@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -38,7 +39,7 @@ public class VKUserService {
         try {
             searchResponse = vk.users().search(userActor)
                     .q(request)
-                    .city(city)
+                    .city(Objects.nonNull(city) ? city : 0)
                     .country(country)
                     .sex(UsersSearchSex.MALE)
                     .lang(Lang.EN)

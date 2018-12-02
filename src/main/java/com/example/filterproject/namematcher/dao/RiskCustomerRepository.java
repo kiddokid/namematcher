@@ -24,6 +24,6 @@ public interface RiskCustomerRepository extends JpaRepository<RiskCustomer, Long
 
     @Query(value = "SELECT * from namematching.risk_customers " +
             "where country in ('UA', 'RU', 'MD', 'BL') " +
-            "AND id not in (select riskcustomerid from namematching.vkuser)", nativeQuery = true)
+            "AND id not in (select riskcustomerid from namematching.vkuser) limit 2", nativeQuery = true)
     List<RiskCustomer> getEastEuropeanCustomersWithoutVk();
 }
