@@ -21,20 +21,20 @@ public class VkTest {
     private static TransportClient transportClient = HttpTransportClient.getInstance();
     private static VkApiClient vk = new VkApiClient(transportClient);
 
-    private static String token = new VkAuthenticator().getAccessToken().getAccess_token();
-
-    @Autowired
-    private VkAuthenticator vkAuthenticator;
-
-    public void tr() throws ClientException, ApiException {
-        UserActor userActor = new UserActor(518453394, token);
-        String res = vk.users().search(userActor)
-                .q("Smolov")
-                .city(1)
-                .sex(UsersSearchSex.MALE)
-                .count(20)
-                .executeAsString();
-
-        System.out.println(res);
-    }
+//    private static String token = new VkAuthenticator().getAccessToken().getAccess_token();
+//
+//    @Autowired
+//    private VkAuthenticator vkAuthenticator;
+//
+//    public void tr() throws ClientException, ApiException {
+//        UserActor userActor = new UserActor(518453394, token);
+//        String res = vk.users().search(userActor)
+//                .q("Smolov")
+//                .city(1)
+//                .sex(UsersSearchSex.MALE)
+//                .count(20)
+//                .executeAsString();
+//
+//        System.out.println(res);
+//    }
 }

@@ -70,7 +70,7 @@ class VkUpdateInfoJobIntSpec extends BaseIntegrationTest {
 
         then:
         List<VkUser> vkUsers = vkUserRepository.findAll()
-        System.out.println(vkUsers)
+        System.out.println(vkUsers.toString())
         assert vkUsers.size() == 2
     }
 }

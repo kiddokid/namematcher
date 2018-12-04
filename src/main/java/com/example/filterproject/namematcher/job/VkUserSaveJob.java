@@ -1,19 +1,22 @@
 package com.example.filterproject.namematcher.job;
 
 import com.example.filterproject.namematcher.dao.RiskCustomerRepository;
+import com.example.filterproject.namematcher.dao.SystemPropertyRepository;
 import com.example.filterproject.namematcher.integration.vk.model.VkUser;
 import com.example.filterproject.namematcher.integration.vk.repository.VkUserRepository;
 import com.example.filterproject.namematcher.integration.vk.service.VKUserService;
 import com.example.filterproject.namematcher.integration.vk.service.VkAliasService;
 import com.example.filterproject.namematcher.model.RiskCustomer;
+import com.example.filterproject.namematcher.model.SystemProperty;
 import com.vk.api.sdk.objects.users.UserFull;
 import com.vk.api.sdk.objects.users.UserMin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -23,41 +26,60 @@ public class VkUserSaveJob {
     private VkUserRepository vkUserRepository;
     private VkAliasService vkAliasService;
     private VKUserService vkUserService;
+    private SystemPropertyRepository systemPropertyRepository;
 
     public VkUserSaveJob(RiskCustomerRepository riskCustomerRepository,
                          VkAliasService vkAliasService,
                          VKUserService vkUserService,
-                         VkUserRepository vkUserRepository) {
+                         VkUserRepository vkUserRepository,
+                         SystemPropertyRepository systemPropertyRepository) {
         this.riskCustomerRepository = riskCustomerRepository;
         this.vkAliasService = vkAliasService;
         this.vkUserService = vkUserService;
         this.vkUserRepository = vkUserRepository;
+        this.systemPropertyRepository = systemPropertyRepository;
     }
 
-    @Scheduled(fixedDelay = 20000)
+    @Scheduled(fixedDelay = 7200)
     public void updateVkInfo() {
-        List<RiskCustomer> riskCustomerList = riskCustomerRepository.getEastEuropeanCustomersWithoutVk();
+        vkUserService.init();
+        Integer offset = Integer.valueOf(getOffset());
+        List<RiskCustomer> riskCustomerList = riskCustomerRepository.getEastEuropeanCustomersWithoutVk(offset);
         log.info("[VK-USER-SAVE-JOB] - found {} users to update VK info", riskCustomerList.size());
         riskCustomerList.forEach(riskCustomer -> {
-            List<Integer> totalFriends = new ArrayList<>();
+            ArrayList<Integer> totalFriends = new ArrayList<>();
             List<UserFull> foundUsers = vkAliasService.findUser(riskCustomer.getFirstName(), riskCustomer.getLastName(), riskCustomer.getCountry(), riskCustomer.getCity());
             if (foundUsers.size() > 0) {
                 foundUsers.forEach(userFull -> {
                     totalFriends.addAll(vkUserService.getUserFriendsIds(userFull.getId()));
                 });
-                Long[] possibleIds = foundUsers.stream().map(UserMin::getId).map(Long::valueOf).toArray(Long[]::new);
-                Long[] friends = totalFriends.stream().map(Long::valueOf).toArray(Long[]::new);
+                ArrayList<Integer> possibleids = foundUsers.stream().map(UserFull::getId).collect(Collectors.toCollection(ArrayList::new));
                 VkUser vkUser = VkUser.builder()
                         .riskcustomerid(riskCustomer.getId())
-                        .possibleids(possibleIds.length > 0 ? possibleIds : null)
-                        .preferableid(possibleIds.length > 0 ? possibleIds[0] : null)
-                        .totalfriendscount(friends.length)
-                        .friends(friends)
+                        .possibleids(possibleids)
+                        .preferableid(possibleids.size() > 0 ? possibleids.get(0) : null)
+                        .totalfriendscount(totalFriends.size())
+                        .friends(totalFriends)
                         .build();
                 log.info("[VK-USER-SAVE-JOB] - trying to save info for user {}", riskCustomer.getId());
                 vkUserRepository.save(vkUser);
                 vkUserRepository.flush();
             }
         });
+        updateOffset(String.valueOf(riskCustomerList.stream()
+                .max(Comparator.comparing(RiskCustomer::getId))
+                .get().getId()));
+    }
+
+    private String getOffset() {
+        SystemProperty systemProperty = systemPropertyRepository.findById("vkMigrationOffset").orElse(null);
+        return Objects.nonNull(systemProperty) ? systemProperty.getValue() : "0";
+    }
+
+    private void updateOffset(String offset) {
+        systemPropertyRepository.save(SystemProperty.builder()
+                .property("vkMigrationOffset")
+                .value(offset)
+                .build());
     }
 }

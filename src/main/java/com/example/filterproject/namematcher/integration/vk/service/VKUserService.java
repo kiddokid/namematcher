@@ -30,8 +30,23 @@ public class VKUserService {
     private static TransportClient transportClient = HttpTransportClient.getInstance();
     private static VkApiClient vk = new VkApiClient(transportClient);
 
-    private static String token = new VkAuthenticator().getAccessToken().getAccess_token();
-    private static UserActor userActor = new UserActor(vkUserId, token);
+    private static String token = null;
+    private static UserActor userActor = null;
+    private static boolean isInit = false;
+
+    private VkAuthenticator vkAuthenticator;
+
+    public VKUserService(VkAuthenticator vkAuthenticator) {
+        this.vkAuthenticator = vkAuthenticator;
+    }
+
+    public void init() {
+        if (!isInit) {
+            isInit = true;
+            token = vkAuthenticator.getAccessToken();
+            userActor = new UserActor(vkUserId, token);
+        }
+    }
 
     public List<UserFull> searchUser(String request, Integer city, Integer country) {
         log.info("[VK-USER-SERVICE] request received - {}, {}, {}", request, city, country);
@@ -78,7 +93,8 @@ public class VKUserService {
                     .count(friendsReturnLimit)
                     .execute();
         } catch (ApiException | ClientException e) {
-            e.printStackTrace();
+            log.error("{VK-USER-SERVICE} - Private profile! Skipping...");
+            return new ArrayList<>();
         }
 
         return getResponse.getItems();

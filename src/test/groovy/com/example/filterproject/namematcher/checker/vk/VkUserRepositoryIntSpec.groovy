@@ -12,19 +12,20 @@ class VkUserRepositoryIntSpec extends BaseIntegrationTest {
 
     def "FindAll returns all users correctly"() {
         given:
+        List<Integer> friends = new Integer[2]
         VkUser vkUser1 = VkUser.builder()
                 .riskcustomerid(1)
-                .possibleids(1000, 1001)
+                .possibleids([1000, 1001])
                 .preferableid(1000)
                 .totalfriendscount(2)
-                .friends(2000L, 2001L)
+                .friends(friends)
                 .build()
         VkUser vkUser2 = VkUser.builder()
                 .riskcustomerid(2)
-                .possibleids(8000, 8001)
+                .possibleids([8000, 8001])
                 .preferableid(8000)
                 .totalfriendscount(3)
-                .friends(4000L, 4001L, 4002L)
+                .friends(friends)
                 .build()
 
         when:

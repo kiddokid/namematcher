@@ -9,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(schema = "namematching", name = "vkuser")
@@ -24,13 +26,19 @@ public class VkUser {
 
     private Long riskcustomerid;
 
-    private Long[] possibleids;
+    //private Integer[] possibleids;
 
-    private Long preferableid;
+    @ElementCollection
+    private List<Integer> possibleids;
+
+    private Integer preferableid;
 
     private Integer totalfriendscount;
 
-    private Long[] friends;
+    //private Integer[] friends;
+
+    @ElementCollection
+    private List<Integer> friends;
 
     @CreationTimestamp
     private ZonedDateTime dateCreated;

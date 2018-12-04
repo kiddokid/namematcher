@@ -27,38 +27,16 @@ create table if not exists namematching.risk_customers
 )
 ;
 
-create table if not exists risk_persons
-(
-	id bigserial not null
-		constraint risk_persons_pkey
-			primary key,
-	address1 varchar(255) not null,
-	address2 varchar(255),
-	city varchar(255),
-	rp_added_by_id bigint,
-	comment varchar(255),
-	country varchar(255) not null,
-	email varchar(255) not null,
-	firstname varchar(255) not null,
-	lastname varchar(255) not null,
-	middlename varchar(255),
-	reason varchar(255) not null,
-	regionstate varchar(255),
-	timestamp timestamp,
-	zip varchar(255)
-)
-;
-
 create table if not exists namematching.vkuser
 (
 	id serial not null
 		constraint vkusers_pkey
 			primary key,
 	riskcustomerid bigint not null,
-	possibleids bigint[],
-	preferableid bigint,
+	possibleids INTEGER[],
+	preferableid INTEGER ,
 	totalfriendscount integer,
-	friends bigint[],
+	friends INTEGER[],
 	date_created timestamp with time zone default now() not null,
 	date_modified timestamp with time zone default now() not null
 )
@@ -67,19 +45,3 @@ create table if not exists namematching.vkuser
 create index if not exists vkusers_idx_possibleids
 	on namematching.vkuser (possibleids)
 ;
-
-create table if not exists vk_user
-(
-	id bigserial not null
-		constraint vk_user_pkey
-			primary key,
-	date_created timestamp,
-	date_modified timestamp,
-	friends bytea,
-	possibleids bytea,
-	preferableid bigint,
-	riskcustomerid bigint,
-	totalfriendscount bigint
-)
-;
-
