@@ -4,15 +4,11 @@ import com.example.filterproject.namematcher.dao.SystemPropertyRepository;
 import com.example.filterproject.namematcher.integration.vk.model.VkOauthLoginResponse;
 import com.example.filterproject.namematcher.model.SystemProperty;
 import com.google.gson.Gson;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import javax.transaction.Transactional;
 import java.util.Objects;
 
 @Component
@@ -32,7 +28,6 @@ public class VkAuthenticator {
         this.systemPropertyRepository = systemPropertyRepository;
     }
 
-    @Transactional
     public String getAccessToken() {
         String token = getAccessTokenFromDB();
         if (Objects.nonNull(token)) {
@@ -68,17 +63,6 @@ public class VkAuthenticator {
 
     private boolean isAccessTokenWorks(String token) {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity("https://api.vk.com/method/friends.areFriends?user_ids=1&access_token=" + token, String.class);
-        if (!responseEntity.getBody().contains("error")) {
-            return true;
-        }
-        return false;
-    }
-
-    @AllArgsConstructor
-    @Data
-    private class AreFriendsResponse {
-
-        private Integer uid;
-        private Integer friends_status;
+        return !responseEntity.getBody().contains("error");
     }
 }

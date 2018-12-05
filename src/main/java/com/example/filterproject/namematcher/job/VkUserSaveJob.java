@@ -9,17 +9,20 @@ import com.example.filterproject.namematcher.integration.vk.service.VkAliasServi
 import com.example.filterproject.namematcher.model.RiskCustomer;
 import com.example.filterproject.namematcher.model.SystemProperty;
 import com.vk.api.sdk.objects.users.UserFull;
-import com.vk.api.sdk.objects.users.UserMin;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
 @Slf4j
+@ConditionalOnProperty(prefix = "job.integration.vk.save", name="enabled", havingValue="true", matchIfMissing = true)
 public class VkUserSaveJob {
 
     private RiskCustomerRepository riskCustomerRepository;
@@ -40,7 +43,7 @@ public class VkUserSaveJob {
         this.systemPropertyRepository = systemPropertyRepository;
     }
 
-    @Scheduled(fixedDelay = 7200)
+    @Scheduled(fixedDelay = 120000)
     public void updateVkInfo() {
         vkUserService.init();
         Integer offset = Integer.valueOf(getOffset());
@@ -66,9 +69,11 @@ public class VkUserSaveJob {
                 vkUserRepository.flush();
             }
         });
-        updateOffset(String.valueOf(riskCustomerList.stream()
-                .max(Comparator.comparing(RiskCustomer::getId))
-                .get().getId()));
+        riskCustomerList.stream()
+                .max(Comparator.comparing(RiskCustomer::getId)).map(RiskCustomer::getId)
+                .ifPresent(id -> {
+                    updateOffset(String.valueOf(id));
+                });
     }
 
     private String getOffset() {

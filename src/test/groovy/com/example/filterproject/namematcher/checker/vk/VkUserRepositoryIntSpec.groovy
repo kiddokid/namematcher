@@ -10,6 +10,10 @@ class VkUserRepositoryIntSpec extends BaseIntegrationTest {
     @Autowired
     private VkUserRepository vkUserRepository
 
+    def setup() {
+        vkUserRepository.deleteAll()
+    }
+
     def "FindAll returns all users correctly"() {
         given:
         List<Integer> friends = new Integer[2]
@@ -30,7 +34,6 @@ class VkUserRepositoryIntSpec extends BaseIntegrationTest {
 
         when:
         vkUserRepository.saveAll([vkUser1, vkUser2])
-        vkUserRepository.flush()
 
         then:
         List<VkUser> vkUsers = vkUserRepository.findAll()

@@ -1,5 +1,6 @@
 package com.example.filterproject.namematcher.checker
 
+import groovy.util.logging.Slf4j
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.containers.PostgreSQLContainer
@@ -8,9 +9,10 @@ import spock.lang.Specification
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT
 
-@Testcontainers
 @ContextConfiguration
 @SpringBootTest(webEnvironment = DEFINED_PORT)
+@Testcontainers
+@Slf4j
 abstract class BaseIntegrationTest extends Specification {
 
     protected static PostgreSQLContainer postgres = new PostgreSQLContainer()
@@ -19,7 +21,7 @@ abstract class BaseIntegrationTest extends Specification {
             .withPassword("root")
 
     def setupSpec() {
-        startPosgresIfNeeded()
+        startPostgresIfNeeded()
         ['spring.datasource.url'     : postgres.getJdbcUrl(),
          'spring.datasource.username': postgres.getUsername(),
          'spring.datasource.password': postgres.getPassword()
@@ -28,14 +30,16 @@ abstract class BaseIntegrationTest extends Specification {
         }
     }
 
-    private static void startPosgresIfNeeded() {
+    private static void startPostgresIfNeeded() {
         if (!postgres.isRunning()) {
+            log.info("[BASE-INTEGRATION-TEST] - Postgres is not started. Running...")
             postgres.start()
         }
     }
 
     def cleanupSpec() {
         if (postgres.isRunning()) {
+            log.info("[BASE-INTEGRATION-TEST] - Stopping Postgres...")
             postgres.stop()
         }
     }

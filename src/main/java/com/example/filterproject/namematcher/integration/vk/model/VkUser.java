@@ -5,11 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,7 +29,7 @@ public class VkUser {
 
     //private Integer[] possibleids;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Integer> possibleids;
 
     private Integer preferableid;
@@ -37,7 +38,7 @@ public class VkUser {
 
     //private Integer[] friends;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     private List<Integer> friends;
 
     @CreationTimestamp
