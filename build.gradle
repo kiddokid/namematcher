@@ -34,6 +34,7 @@ test {
 configurations.all {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     exclude group: 'org.springframework.boot', module: 'logback-classic'
+    exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
 }
 
 compileTestJava {
@@ -44,6 +45,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-webflux
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.0.6.RELEASE'
     compile('org.springframework.boot:spring-boot-starter-web')
+    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.0.5.RELEASE') {
+        exclude(group: 'org.apache.tomcat', module: 'tomcat-jdbc')
+    }
     runtime('org.postgresql:postgresql')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
@@ -79,10 +83,12 @@ dependencies {
 // https://mvnrepository.com/artifact/com.vk.api/sdk
     compile group: 'com.vk.api', name: 'sdk', version: '0.5.12'
 // https://mvnrepository.com/artifact/org.testcontainers/testcontainers
-    compile group: 'org.testcontainers', name: 'testcontainers', version: '1.10.2'
+    testCompile group: 'org.testcontainers', name: 'testcontainers', version: '1.10.2'
 // https://mvnrepository.com/artifact/org.testcontainers/postgresql
-    compile group: 'org.testcontainers', name: 'postgresql', version: '1.10.2'
+    testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.10.2'
 // https://mvnrepository.com/artifact/org.testcontainers/spock
-    compile group: 'org.testcontainers', name: 'spock', version: '1.10.2'
+    testCompile group: 'org.testcontainers', name: 'spock', version: '1.10.2'
+    // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+    compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.3'
 
 }

@@ -5,11 +5,23 @@ spring:
     username: kid
     password: root
     hikari:
-      maximum-pool-size: 20
-      idle-timeout: 30000
-    driver-class-name: org.postgresql.Driver
+      maxLifetime: 60000
+      connection-timeout: 60000
+      maximum-pool-size: 30
+      driver-class-name: org.postgresql.Driver
+      minimum-idle: 5
+      idle-timeout: 60000
+      auto-commit: true
+      validation-timeout: 3000
+      login-timeout: 5
   jpa:
-    hibernate:
-      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    properties.hibertnate.default_schema: namematching
+  flyway:
+    schemas: namematching
+    baseline-on-migrate: true
 server:
   port: 8080
+
+job.integration.vk.save:
+  enabled: false

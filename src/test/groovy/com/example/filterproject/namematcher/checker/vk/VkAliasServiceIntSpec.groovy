@@ -1,9 +1,12 @@
-package com.example.filterproject.namematcher.checker
+package com.example.filterproject.namematcher.checker.vk
 
+import com.example.filterproject.namematcher.checker.BaseIntegrationTest
 import com.example.filterproject.namematcher.integration.vk.service.VkAliasService
 import com.vk.api.sdk.objects.users.UserFull
 import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.Ignore
 
+@Ignore
 class VkAliasServiceIntSpec extends BaseIntegrationTest {
 
     @Autowired
@@ -11,7 +14,7 @@ class VkAliasServiceIntSpec extends BaseIntegrationTest {
 
     def "Should return correct response"() {
         when:
-        List<UserFull> foundUsers = vkAliasService.findUser("Igor", "Usevich", "UA")
+        List<UserFull> foundUsers = vkAliasService.findUser("Valery", "Kuznetsov", "UA")
 
         then:
         assert !foundUsers.isEmpty()

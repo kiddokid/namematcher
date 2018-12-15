@@ -12,24 +12,43 @@ import com.vk.api.sdk.objects.users.UserFull;
 import com.vk.api.sdk.objects.users.responses.SearchResponse;
 import com.vk.api.sdk.queries.users.UsersSearchSex;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
+@ConditionalOnProperty(prefix = "job.integration.vk.save", name="enabled", havingValue="true", matchIfMissing = true)
 public class VKUserService {
 
     //TODO MOVE ALL CONFIGS TO APPLICATION.YML
     private static final Integer vkUserId = 518453394;
+    private Integer resultLimit = 3;
+    private Integer friendsReturnLimit = 1200;
 
     private static TransportClient transportClient = HttpTransportClient.getInstance();
     private static VkApiClient vk = new VkApiClient(transportClient);
 
-    private static String token = new VkAuthenticator().getAccessToken().getAccess_token();
-    private static UserActor userActor = new UserActor(vkUserId, token);
+    private static String token = null;
+    private static UserActor userActor = null;
+    private static boolean isInit = false;
 
-    private Integer resultLimit = 5;
+    private VkAuthenticator vkAuthenticator;
+
+    public VKUserService(VkAuthenticator vkAuthenticator) {
+        this.vkAuthenticator = vkAuthenticator;
+    }
+
+    public void init() {
+        if (!isInit) {
+            isInit = true;
+            token = vkAuthenticator.getAccessToken();
+            userActor = new UserActor(vkUserId, token);
+        }
+    }
 
     public List<UserFull> searchUser(String request, Integer city, Integer country) {
         log.info("[VK-USER-SERVICE] request received - {}, {}, {}", request, city, country);
@@ -37,7 +56,7 @@ public class VKUserService {
         try {
             searchResponse = vk.users().search(userActor)
                     .q(request)
-                    .city(city)
+                    .city(Objects.nonNull(city) ? city : 0)
                     .country(country)
                     .sex(UsersSearchSex.MALE)
                     .lang(Lang.EN)
@@ -73,10 +92,29 @@ public class VKUserService {
                     .get(userActor)
                     .userId(userId)
                     .lang(Lang.EN)
+                    .count(friendsReturnLimit)
                     .execute();
         } catch (ApiException | ClientException e) {
+            log.error("{VK-USER-SERVICE} - Private profile! Skipping...");
+            return new ArrayList<>();
+        }
+
+        return getResponse.getItems();
+    }
+
+    public List<Integer> getMutualFriends(Integer userId1, Integer userId2) {
+        List<Integer> mutualFriendsList = new ArrayList<>();
+        try {
+            mutualFriendsList = vk.friends()
+                    .getMutual(userActor)
+                    .sourceUid(userId1)
+                    .targetUid(userId2)
+                    .lang(Lang.EN)
+                    .execute();
+        }
+        catch (ClientException | ApiException e) {
             e.printStackTrace();
         }
-        return getResponse.getItems();
+        return mutualFriendsList;
     }
 }

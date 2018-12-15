@@ -4,9 +4,11 @@ import com.example.filterproject.namematcher.model.RiskCustomer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface RiskCustomerRepository extends JpaRepository<RiskCustomer, Long> {
 
     RiskCustomer getRiskCustomerById(Long id);
@@ -22,4 +24,9 @@ public interface RiskCustomerRepository extends JpaRepository<RiskCustomer, Long
     @Query(value = "select * from namematching.risk_customers limit :batchSize", nativeQuery = true)
     List<RiskCustomer> getCustomersInBatch(@Param("batchSize")Integer batchSize);
 
+    @Query(value = "SELECT * from namematching.risk_customers as r " +
+            "where r.country in ('UA', 'RU', 'MD', 'BL') " +
+            "AND r.id not in (select riskcustomerid from namematching.vkuser)" +
+            "AND r.id > :offset order by id limit 2", nativeQuery = true)
+    List<RiskCustomer> getEastEuropeanCustomersWithoutVk(@Param("offset") Integer offset);
 }

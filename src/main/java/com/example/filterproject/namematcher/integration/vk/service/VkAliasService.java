@@ -1,12 +1,17 @@
 package com.example.filterproject.namematcher.integration.vk.service;
 
-import com.example.filterproject.namematcher.integration.vk.model.VkUserEntity;
 import com.vk.api.sdk.objects.users.UserFull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
+@ConditionalOnProperty(prefix = "job.integration.vk.save", name="enabled", havingValue="true", matchIfMissing = true)
 public class VkAliasService {
 
     private VkApplicationService vkApplicationService;
@@ -19,10 +24,11 @@ public class VkAliasService {
     }
 
     public void process() {
-        List<UserFull> user = findUser("Igor", "Usevich", "UA");
-
-        System.out.println(" FIND USER - " + user.get(0).getFirstName() + " " + user.get(0).getLastName());
-        System.out.println(" Friends COUNT - " + vkUserService.getUserFriendsIds(user.get(0).getId()));
+//        List<UserFull> user = findUser("Igor", "Usevich", "UA");
+//
+//        System.out.println(" FIND USER - " + user.get(0).getFirstName() + " " + user.get(0).getLastName());
+//        System.out.println(" Friends COUNT - " + vkUserService.getUserFriendsIds(user.get(0).getId()));
+        isUserHitOnline("Andriy", "Shmatko", "UA");
     }
 
     public List<UserFull> findUser(String firstName, String lastName, String country, String city) {
@@ -34,5 +40,21 @@ public class VkAliasService {
     public List<UserFull> findUser(String firstName, String lastName, String country) {
         Integer countryId = vkApplicationService.getCountryIdSafely(country);
         return vkUserService.searchUser(firstName+ " " + lastName, countryId);
+    }
+
+    public boolean isUserHitOnline(String firstName, String lastName, String country) {
+        List<Integer> totalFriendsList = new ArrayList<>();
+        List<UserFull> foundUsers = findUser(firstName, lastName, country);
+        foundUsers.forEach(userFull -> totalFriendsList.addAll(vkUserService.getUserFriendsIds(userFull.getId())));
+        log.info("[VK-ALIAS-SERVICE] {} total friends found for possible match user", totalFriendsList.size());
+        return true;
+    }
+
+    public boolean isUserHitOnline(String firstName, String lastName, String country, String city) {
+        List<Integer> totalFriendsList = new ArrayList<>();
+        List<UserFull> foundUsers = findUser(firstName, lastName, country, city);
+        foundUsers.forEach(userFull -> totalFriendsList.addAll(vkUserService.getUserFriendsIds(userFull.getId())));
+        log.info("[VK-ALIAS-SERVICE] {} total friends found for possible match user", totalFriendsList.size());
+        return true;
     }
 }

@@ -9,11 +9,13 @@ import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.objects.ServiceClientCredentialsFlowResponse;
 import com.vk.api.sdk.objects.database.responses.GetCitiesResponse;
 import com.vk.api.sdk.objects.database.responses.GetCountriesResponse;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import static java.util.Objects.nonNull;
 
 @Service
+@ConditionalOnProperty(prefix = "job.integration.vk.save", name="enabled", havingValue="true", matchIfMissing = true)
 public class VkApplicationService {
 
     private static final Integer APP_ID = 6762663;
@@ -86,7 +88,7 @@ public class VkApplicationService {
         } catch (ClientException | ApiException e) {
             e.printStackTrace();
         }
-        if (nonNull(getCitiesResponse.getItems()))
+        if (nonNull(getCitiesResponse.getItems()) && getCitiesResponse.getItems().size() > 0 )
             result = getCitiesResponse.getItems().get(0).getId();
         return result;
     }
