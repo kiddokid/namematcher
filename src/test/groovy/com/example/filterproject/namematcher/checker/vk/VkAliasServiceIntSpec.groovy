@@ -4,7 +4,9 @@ import com.example.filterproject.namematcher.checker.BaseIntegrationTest
 import com.example.filterproject.namematcher.integration.vk.service.VkAliasService
 import com.vk.api.sdk.objects.users.UserFull
 import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.Ignore
 
+@Ignore
 class VkAliasServiceIntSpec extends BaseIntegrationTest {
 
     @Autowired

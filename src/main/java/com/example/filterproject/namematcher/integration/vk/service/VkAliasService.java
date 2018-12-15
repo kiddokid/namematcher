@@ -2,6 +2,7 @@ package com.example.filterproject.namematcher.integration.vk.service;
 
 import com.vk.api.sdk.objects.users.UserFull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@ConditionalOnProperty(prefix = "job.integration.vk.save", name="enabled", havingValue="true", matchIfMissing = true)
 public class VkAliasService {
 
     private VkApplicationService vkApplicationService;

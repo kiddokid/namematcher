@@ -23,16 +23,13 @@ public class Printer {
 
     public Printer(RiskCustomerRepository riskCustomerRepository,
                    CustomerService customerService,
-                   TextFormatter textFormatter,
-                   VkAliasService vkTest) {
+                   TextFormatter textFormatter) {
         this.riskCustomerRepository = riskCustomerRepository;
         this.customerService = customerService;
         this.textFormatter = textFormatter;
-        this.vkTest = vkTest;
     }
 
-
     public void printText() {
-       vkTest.process();
+
     }
 }

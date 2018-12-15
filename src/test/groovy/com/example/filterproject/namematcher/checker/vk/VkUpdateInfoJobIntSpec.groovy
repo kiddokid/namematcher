@@ -7,7 +7,9 @@ import com.example.filterproject.namematcher.integration.vk.repository.VkUserRep
 import com.example.filterproject.namematcher.job.VkUserSaveJob
 import com.example.filterproject.namematcher.model.RiskCustomer
 import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.Ignore
 
+@Ignore
 class VkUpdateInfoJobIntSpec extends BaseIntegrationTest {
 
     @Autowired
@@ -20,8 +22,8 @@ class VkUpdateInfoJobIntSpec extends BaseIntegrationTest {
     private VkUserSaveJob vkUserSaveJob
 
     def setup() {
-        vkUserRepository?.deleteAllInBatch()
-        riskCustomerRepository?.deleteAllInBatch()
+//        vkUserRepository?.deleteAllInBatch()
+//        riskCustomerRepository?.deleteAllInBatch()
     }
 
     def "Migration of VK data works correctly"() {

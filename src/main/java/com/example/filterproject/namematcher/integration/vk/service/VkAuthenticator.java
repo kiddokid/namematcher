@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import javax.transaction.Transactional;
 import java.util.Objects;
 
 @Component
@@ -28,6 +29,7 @@ public class VkAuthenticator {
         this.systemPropertyRepository = systemPropertyRepository;
     }
 
+    @Transactional
     public String getAccessToken() {
         String token = getAccessTokenFromDB();
         if (Objects.nonNull(token)) {

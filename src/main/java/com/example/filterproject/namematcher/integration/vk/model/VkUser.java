@@ -14,7 +14,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
-@Table(schema = "namematching", name = "vkuser")
+@Table(name = "vkuser")
 @Data
 @Builder
 @AllArgsConstructor

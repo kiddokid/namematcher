@@ -1,11 +1,11 @@
-CREATE SCHEMA namematching;
+CREATE SCHEMA if not exists namematching;
 create sequence  namematching.risk_customers_id_seq
 ;
 
-create sequence  namematching.vkusers_id_seq
+create sequence if not exists  namematching.vkusers_id_seq
 ;
 
-create table  namematching.risk_customers
+create table if not exists namematching.risk_customers
 (
 	id serial not null
 		constraint risk_customers_pkey
@@ -27,7 +27,7 @@ create table  namematching.risk_customers
 )
 ;
 
-create table  namematching.vkuser
+create table if not exists  namematching.vkuser
 (
 	id serial not null
 		constraint vkusers_pkey
@@ -42,6 +42,23 @@ create table  namematching.vkuser
 )
 ;
 
-create index  vkusers_idx_possibleids
+create table namematching.vk_user_friends
+(
+  vk_user_id bigint not null
+    constraint fkb727emvejkt2hs30qbtfjywu
+    references vkuser,
+  friends    integer
+);
+
+create table namematching.vk_user_possibleids
+(
+  vk_user_id  bigint not null
+    constraint fksbpjq8mpnprhmbsr6kj03deq6
+    references vkuser,
+  possibleids integer
+);
+
+
+create index if not exists  vkusers_idx_possibleids
 	on namematching.vkuser (possibleids)
 ;

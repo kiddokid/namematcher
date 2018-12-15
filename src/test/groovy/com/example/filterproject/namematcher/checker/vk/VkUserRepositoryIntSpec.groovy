@@ -4,19 +4,21 @@ import com.example.filterproject.namematcher.checker.BaseIntegrationTest
 import com.example.filterproject.namematcher.integration.vk.model.VkUser
 import com.example.filterproject.namematcher.integration.vk.repository.VkUserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.Ignore
 
+@Ignore
 class VkUserRepositoryIntSpec extends BaseIntegrationTest {
 
     @Autowired
     private VkUserRepository vkUserRepository
 
     def setup() {
-        vkUserRepository.deleteAll()
+//        vkUserRepository.deleteAll()
     }
 
     def "FindAll returns all users correctly"() {
         given:
-        List<Integer> friends = new Integer[2]
+        List<Integer> friends = [1,2]
         VkUser vkUser1 = VkUser.builder()
                 .riskcustomerid(1)
                 .possibleids([1000, 1001])
@@ -42,5 +44,7 @@ class VkUserRepositoryIntSpec extends BaseIntegrationTest {
         VkUser user2 = vkUsers.get(1)
         assert user1.getId() == 1 && user1.getRiskcustomerid() == 1 && user1.getDateCreated() != null
         assert user2.getId() == 2 && user2.getRiskcustomerid() == 2 && user2.getDateCreated() != null
+        System.out.println(user2.getId())
+        System.out.println(user1.getId())
     }
 }

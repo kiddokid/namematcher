@@ -12,6 +12,7 @@ import com.vk.api.sdk.objects.users.UserFull;
 import com.vk.api.sdk.objects.users.responses.SearchResponse;
 import com.vk.api.sdk.queries.users.UsersSearchSex;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.Objects;
 
 @Service
 @Slf4j
+@ConditionalOnProperty(prefix = "job.integration.vk.save", name="enabled", havingValue="true", matchIfMissing = true)
 public class VKUserService {
 
     //TODO MOVE ALL CONFIGS TO APPLICATION.YML

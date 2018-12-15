@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -44,6 +45,7 @@ public class VkUserSaveJob {
     }
 
     @Scheduled(fixedDelay = 120000)
+    @Transactional
     public void updateVkInfo() {
         vkUserService.init();
         Integer offset = Integer.valueOf(getOffset());

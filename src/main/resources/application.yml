@@ -5,22 +5,18 @@ spring:
     username: kid
     password: root
     hikari:
-      connection-timeout: 10000
-      leak-detection-threshold: 60000
-      validation-timeout: 30000
-      connection-test-query: SELECT 1;
-      jdbc-url: jdbc:postgresql://localhost:5432/riskdb
-      username: kid
-      password: root
-      data-source-properties: stringtype=unspecified
-      maximum-pool-size: 16
-      max-lifetime: 1800000
-      transaction-isolation: TRANSACTION_READ_COMMITTED
-      pool-name: hikari.local
-    driver-class-name: org.postgresql.Driver
+      maxLifetime: 60000
+      connection-timeout: 60000
+      maximum-pool-size: 30
+      driver-class-name: org.postgresql.Driver
+      minimum-idle: 5
+      idle-timeout: 60000
+      auto-commit: true
+      validation-timeout: 3000
+      login-timeout: 5
   jpa:
-    hibernate:
-      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    properties.hibertnate.default_schema: namematching
   flyway:
     schemas: namematching
     baseline-on-migrate: true

@@ -1,5 +1,6 @@
-package com.example.filterproject.namematcher.checker
+package com.example.filterproject.namematcher.checker.repository
 
+import com.example.filterproject.namematcher.checker.BaseIntegrationTest
 import com.example.filterproject.namematcher.dao.SystemPropertyRepository
 import com.example.filterproject.namematcher.model.SystemProperty
 import org.springframework.beans.factory.annotation.Autowired
