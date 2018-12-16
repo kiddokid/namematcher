@@ -30,7 +30,7 @@ public class PrivateRestController {
     }
 
     @Validated
-    @GetMapping("/match")
+    @GetMapping("/match") // TODO: REWRITE TO POST
     public ResponseEntity matchCustomer(@RequestParam("firstName") String firstName, @RequestParam("middleName") Optional<String> middleName,
                                         @RequestParam("lastName") String lastName, @RequestParam("email") String email,
                                         @RequestParam("address1") String address1, @RequestParam("address2") Optional<String> address2,

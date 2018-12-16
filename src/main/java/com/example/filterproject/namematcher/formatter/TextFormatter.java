@@ -4,10 +4,7 @@ import com.example.filterproject.namematcher.model.RiskCustomer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 
 import static java.util.Objects.nonNull;
 
@@ -407,5 +404,12 @@ public class TextFormatter {
 
     private boolean isUS(RiskCustomer riskCustomer) {
         return riskCustomer.getCountry().equals("US");
+    }
+
+    public String normilize(String inputString) {
+        String result = inputString.toLowerCase();
+        String words[] = result.split(" ");
+        Arrays.sort(words);
+        return Arrays.toString(words);
     }
 }

@@ -42,23 +42,20 @@ create table if not exists  namematching.vkuser
 )
 ;
 
-create table namematching.vk_user_friends
-(
-  vk_user_id bigint not null
-    constraint fkb727emvejkt2hs30qbtfjywu
-    references vkuser,
-  friends    integer
-);
-
-create table namematching.vk_user_possibleids
-(
-  vk_user_id  bigint not null
-    constraint fksbpjq8mpnprhmbsr6kj03deq6
-    references vkuser,
-  possibleids integer
-);
-
-
 create index if not exists  vkusers_idx_possibleids
 	on namematching.vkuser (possibleids)
 ;
+
+
+create table if not exists namematching.normilized_customer_data
+(
+ id serial primary key not null,
+ risk_customer_id bigint not null,
+ name text not null,
+ address1 text not null,
+ address2 text,
+ region text,
+ city text,
+ zip text,
+ country  varchar(2)
+)
