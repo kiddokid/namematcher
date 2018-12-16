@@ -3,24 +3,16 @@ package com.example.filterproject.namematcher.checker;
 import com.example.filterproject.namematcher.model.CheckResult;
 import com.example.filterproject.namematcher.model.RiskCustomer;
 import lombok.Data;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
-import org.apache.commons.text.similarity.JaroWinklerDistance;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 import static java.util.Objects.nonNull;
 
-@Component
 @Slf4j
-@Getter
-public class DynamicCheckerImpl implements CustomerChecker {
-
-    private Double totalThreshold = 40.0;
-    private Double addressThreshold = 40.0;
+@Data
+public class AbstractCustomerSimilarityChecker implements CustomerChecker {
 
     private Integer notNullCount = 0;
     private Double totalResult = 0.0;
@@ -28,17 +20,15 @@ public class DynamicCheckerImpl implements CustomerChecker {
     private Double addressCoeff = 0.0;
     private Double totalCoeff = 0.0;
 
-    private JaroWinklerDistance jaroWinklerDistance = new JaroWinklerDistance();
-
     @Override
-    public CheckResult apply(List<RiskCustomer> dbMatchList, RiskCustomer customerToCheck) {
+    public CheckResult calculate(List<RiskCustomer> dbMatchList, RiskCustomer customerToCheck) {
         List<CheckResult> checkResultList = new ArrayList<>();
-        dbMatchList.forEach(foundCustomer -> checkResultList.add(apply(foundCustomer, customerToCheck)));
+        dbMatchList.forEach(foundCustomer -> checkResultList.add(calculate(foundCustomer, customerToCheck)));
         return Collections.max(checkResultList, Comparator.comparing(CheckResult::getTotalMatch));
     }
 
     @Override
-    public CheckResult apply(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
+    public CheckResult calculate(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
         Double addressResult;
         Double nameResult;
         totalResult = 0.0;
@@ -52,17 +42,17 @@ public class DynamicCheckerImpl implements CustomerChecker {
         checkOthers(foundCustomer, inputCustomer);
 
         totalResult = Precision.round(totalResult, 2);
-        log.info("[DYNAMIC-CHECKER] - For userId - {} total result is {}", foundCustomer.getId(), totalResult, totalResult);
+        log.info("[{}] - For userId - {} total result is {}", getClass().getSimpleName(), foundCustomer.getId(), totalResult, totalResult);
         return CheckResult.builder()
                 .addressMatch(addressResult)
                 .riskCustomer(inputCustomer)
                 .nameMatch(nameResult)
                 .totalMatch(totalResult)
                 .build();
-
     }
 
-    protected Double checkAddressGroup(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
+    @Override
+    public Double checkAddressGroup(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
         Double result = 0.0;
         Double midResult;
         for (Map.Entry<String, Object> inputEntry : inputCustomer.getAddressMap().entrySet()) {
@@ -71,12 +61,12 @@ public class DynamicCheckerImpl implements CustomerChecker {
                 result += (midResult * addressCoeff);
             }
         }
-        log.info("[DYNAMIC-CHECKER] - AddressChecking result - {}", result);
+        log.info("[{}] - AddressChecking result - {}", getClass().getSimpleName(), result);
         return Precision.round(result, 2);
     }
 
-
-    protected Double checkNameGroup(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
+    @Override
+    public Double checkNameGroup(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
         Double result = 0.0;
         Double midResult;
         for (Map.Entry<String, Object> inputEntry : inputCustomer.getNameMap().entrySet()) {
@@ -85,7 +75,7 @@ public class DynamicCheckerImpl implements CustomerChecker {
                 result += (midResult * nameCoeff);
             }
         }
-        log.info("[DYNAMIC-CHECKER] - NameChecking result - {}", result);
+        log.info("[{}] - NameChecking result - {}", getClass().getSimpleName(), result);
         return Precision.round(result, 2);
     }
 
@@ -95,13 +85,6 @@ public class DynamicCheckerImpl implements CustomerChecker {
                 getMiddleResult(foundCustomer.getOthersMap(), inputEntry);
             }
         }
-    }
-
-    private Double getMiddleResult(Map<String, Object> foundCustomerMap, Map.Entry<String, Object> inputEntrySet) {
-        Double midResult = jaroWinklerDistance.apply(inputEntrySet.getValue().toString().toLowerCase(),
-                foundCustomerMap.get(inputEntrySet.getKey()).toString().toLowerCase());
-        totalResult += (midResult * totalCoeff);
-        return midResult;
     }
 
     protected Double calculateCoefficient(Map<String, Object> customerAttMap) {
@@ -114,6 +97,7 @@ public class DynamicCheckerImpl implements CustomerChecker {
         return Precision.round((100.0 / notNullCount), 1);
     }
 
-
-
+    public Double getMiddleResult(Map<String, Object> foundCustomerMap, Map.Entry<String, Object> inputEntrySet) {
+        return null;
+    }
 }

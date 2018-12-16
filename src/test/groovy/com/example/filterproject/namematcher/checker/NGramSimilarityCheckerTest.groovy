@@ -1,17 +1,18 @@
 package com.example.filterproject.namematcher.checker
 
+import com.example.filterproject.namematcher.checker.implementations.NGramSimilarityCheckerImpl
 import com.example.filterproject.namematcher.model.CheckResult
 import com.example.filterproject.namematcher.model.RiskCustomer
 import spock.lang.Specification
 import spock.lang.Unroll
 
 @Unroll
-class DynamicCheckerImplTest extends Specification {
+class NGramSimilarityCheckerTest extends Specification{
 
-    private DynamicCheckerImpl dynamicChecker
+    private NGramSimilarityCheckerImpl dynamicChecker
 
     def setup() {
-        dynamicChecker = new DynamicCheckerImpl()
+        dynamicChecker = new NGramSimilarityCheckerImpl()
     }
 
     def "CalculateCoefficient happy flow 1"() {
@@ -71,7 +72,7 @@ class DynamicCheckerImplTest extends Specification {
                 .build()
 
         when:
-        CheckResult result = dynamicChecker.apply(foundCustomer, inputCustomer)
+        CheckResult result = dynamicChecker.calculate(foundCustomer, inputCustomer)
         System.out.println(result)
 
         then:
@@ -98,7 +99,7 @@ class DynamicCheckerImplTest extends Specification {
                 .build()
 
         when:
-        CheckResult result = dynamicChecker.apply(foundCustomer, inputCustomer)
+        CheckResult result = dynamicChecker.calculate(foundCustomer, inputCustomer)
         System.out.println(result)
 
         then:
@@ -132,7 +133,7 @@ class DynamicCheckerImplTest extends Specification {
                 .build()
 
         when:
-        CheckResult result = dynamicChecker.apply(foundCustomer, inputCustomer)
+        CheckResult result = dynamicChecker.calculate(foundCustomer, inputCustomer)
 
         then:
         assert result.addressMatch > 99

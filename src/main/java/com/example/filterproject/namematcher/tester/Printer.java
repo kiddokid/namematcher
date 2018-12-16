@@ -1,8 +1,8 @@
 package com.example.filterproject.namematcher.tester;
 
+import com.example.filterproject.namematcher.checker.configuration.ApacheNGramDistance;
 import com.example.filterproject.namematcher.dao.RiskCustomerRepository;
 import com.example.filterproject.namematcher.formatter.TextFormatter;
-import com.example.filterproject.namematcher.integration.vk.service.VkAliasService;
 import com.example.filterproject.namematcher.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -17,7 +17,6 @@ public class Printer {
     private CustomerService customerService;
     private LevenshteinDistance levenshteinDistance = new LevenshteinDistance(9);
     private TextFormatter textFormatter;
-    private VkAliasService vkTest;
 
     private static Integer offset = 0;
 
@@ -29,7 +28,8 @@ public class Printer {
         this.textFormatter = textFormatter;
     }
 
+    @Scheduled(fixedDelay = 10000)
     public void printText() {
-
+        //log.info("NGRAM SIMILARITY TEST {} ", nGramDistance.getDistance("source string", "sorce string"));
     }
 }
