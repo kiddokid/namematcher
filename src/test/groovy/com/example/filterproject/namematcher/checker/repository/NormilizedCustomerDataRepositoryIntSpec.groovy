@@ -32,7 +32,6 @@ class NormilizedCustomerDataRepositoryIntSpec extends BaseIntegrationTest {
         then:
         List<NormilizedCustomerData> dataList = repository.findAll()
         NormilizedCustomerData first = dataList.get(0)
-        assert first.getId() == 1
         assert first.getRiskCustomerId() == 1
     }
 
