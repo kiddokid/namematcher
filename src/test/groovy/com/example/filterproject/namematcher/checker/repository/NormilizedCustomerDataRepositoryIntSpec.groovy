@@ -10,6 +10,10 @@ class NormilizedCustomerDataRepositoryIntSpec extends BaseIntegrationTest {
     @Autowired
     private NormilizedCustomerDataRepository repository
 
+    def setup() {
+        repository?.deleteAllInBatch()
+    }
+
     def "findAll returns correct result"() {
         NormilizedCustomerData data = NormilizedCustomerData.builder()
         .riskCustomerId(1)
