@@ -57,5 +57,5 @@ create table if not exists namematching.normilized_customer_data
  region text,
  city text,
  zip text,
- country  varchar(2)
+ country  varchar(50)
 )

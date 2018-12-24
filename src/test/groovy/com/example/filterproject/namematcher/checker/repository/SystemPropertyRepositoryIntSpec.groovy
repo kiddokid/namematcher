@@ -17,9 +17,9 @@ class SystemPropertyRepositoryIntSpec extends BaseIntegrationTest {
     def "findAll return all entities correctly"() {
         given:
         SystemProperty systemProperty = SystemProperty.builder()
-        .property("vkKey")
-        .value("3240fjsodif43rbfdsbfkjsdf")
-        .build()
+                .property("NORMALIZED_TEXT_SAVE_OFFSET")
+                .value("3240fjsodif43rbfdsbfkjsdf")
+                .build()
 
         systemPropertyRepository.save(systemProperty)
 
@@ -28,7 +28,7 @@ class SystemPropertyRepositoryIntSpec extends BaseIntegrationTest {
 
         then:
         assert systemProperties.size() == 1
-        assert systemProperties.get(0).property == "vkKey"
+        assert systemProperties.get(0).property == "NORMALIZED_TEXT_SAVE_OFFSET"
         assert systemProperties.get(0).value == "3240fjsodif43rbfdsbfkjsdf"
 
         when:
@@ -36,7 +36,7 @@ class SystemPropertyRepositoryIntSpec extends BaseIntegrationTest {
         systemPropertyRepository.save(systemProperty)
 
         then:
-        Optional<SystemProperty> systemProperty1 = systemPropertyRepository.findById("vkKey")
+        Optional<SystemProperty> systemProperty1 = systemPropertyRepository.findById("NORMALIZED_TEXT_SAVE_OFFSET")
         assert systemProperty1.get().getValue() == "3240fjsodif43rbfdsbfkjsdf"
     }
 }

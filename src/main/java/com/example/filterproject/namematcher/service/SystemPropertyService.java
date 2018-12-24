@@ -5,13 +5,14 @@ import com.example.filterproject.namematcher.model.SystemProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @Slf4j
 public class SystemPropertyService {
 
-    private SystemPropertyRepository repository;
+    private final SystemPropertyRepository repository;
 
     public SystemPropertyService(SystemPropertyRepository repository) {
         this.repository = repository;
@@ -25,8 +26,8 @@ public class SystemPropertyService {
                 result = Long.valueOf(systemProperty.get().getValue());
             }
             catch (Exception e) {
-                log.error("[{}] Invalid property value argument! Can not return Long from String!");
-                return null;
+                log.error("[{}] Invalid property value argument! Can not return Long from String!", this.getClass().getSimpleName());
+                return result;
             }
         }
         return result;
