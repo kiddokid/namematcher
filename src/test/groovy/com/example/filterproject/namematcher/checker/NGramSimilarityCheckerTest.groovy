@@ -1,20 +1,17 @@
 package com.example.filterproject.namematcher.checker
 
-import com.example.filterproject.namematcher.checker.implementations.NGramSimilarityCheckerImpl
+import com.example.filterproject.namematcher.checker.implementations.NGramSimilarityChecker
 import com.example.filterproject.namematcher.model.CheckResult
 import com.example.filterproject.namematcher.model.NormilizedCustomerData
 import com.example.filterproject.namematcher.model.RiskCustomer
-import spock.lang.Specification
+import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Unroll
 
 @Unroll
-class NGramSimilarityCheckerTest extends Specification{
+class NGramSimilarityCheckerTest extends BaseIntegrationTest{
 
-    private NGramSimilarityCheckerImpl dynamicChecker
-
-    def setup() {
-        dynamicChecker = new NGramSimilarityCheckerImpl()
-    }
+    @Autowired
+    private NGramSimilarityChecker dynamicChecker
 
     def "CalculateCoefficient happy flow 1"() {
 
