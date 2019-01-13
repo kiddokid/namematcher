@@ -1,14 +1,16 @@
 package com.example.filterproject.namematcher.formatter;
 
+import com.example.filterproject.namematcher.model.NormilizedCustomerData;
 import com.example.filterproject.namematcher.model.RiskCustomer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Component
@@ -368,7 +370,7 @@ public class TextFormatter {
             map.put("Zaire", "ZR");
             map.put("Zimbabwe", "ZW");
             countryCode = map.get(country);
-            if (Objects.isNull(countryCode)) {
+            if (isNull(countryCode)) {
                 log.error("[TEXT-FORMATTER] - Country {} not found", country);
             }
             return countryCode;
@@ -407,5 +409,30 @@ public class TextFormatter {
 
     private boolean isUS(RiskCustomer riskCustomer) {
         return riskCustomer.getCountry().equals("US");
+    }
+
+    public NormilizedCustomerData normalize(RiskCustomer riskCustomer) {
+        return NormilizedCustomerData.builder()
+                .riskCustomerId(riskCustomer.getId())
+                .name(normalize(riskCustomer.getFirstName() + " " + riskCustomer.getLastName()))
+                .address1(normalize(riskCustomer.getAddress1()))
+                .address2(normalize(riskCustomer.getAddress2()))
+                .region(normalize(riskCustomer.getRegion_state()))
+                .city(normalize(riskCustomer.getCity()))
+                .zip(normalize(riskCustomer.getZip()))
+                .country(normalize(riskCustomer.getCountry()))
+                .build();
+    }
+    
+    public String normalize(String inputString) {
+        if (nonNull(inputString)) {
+            StringBuilder builder = new StringBuilder();
+            String words[] = inputString.toLowerCase().split(" ");
+            Arrays.sort(words);
+            for (String value : words) {
+                builder.append(value);
+            }
+            return builder.toString().replace(" ", "");
+        } else return "";
     }
 }

@@ -90,5 +90,4 @@ dependencies {
     testCompile group: 'org.testcontainers', name: 'spock', version: '1.10.2'
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.3'
-
 }

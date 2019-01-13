@@ -1,7 +1,6 @@
 package com.example.filterproject.namematcher.model.descision;
 
 import com.example.filterproject.namematcher.model.CheckResult;
-import com.example.filterproject.namematcher.model.RiskCustomer;
 import lombok.Builder;
 import lombok.Data;
 

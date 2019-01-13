@@ -20,7 +20,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RiskCustomer {
+public class RiskCustomer implements Customer {
 
     @Id
     @JsonIgnore
