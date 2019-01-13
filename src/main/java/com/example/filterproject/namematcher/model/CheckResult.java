@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CheckResult {
 
-    private RiskCustomer riskCustomer;
+    private Customer riskCustomer;
     private Double totalMatch;
     private Double addressMatch;
     private Double nameMatch;
+    private Boolean emailMatch;
 }

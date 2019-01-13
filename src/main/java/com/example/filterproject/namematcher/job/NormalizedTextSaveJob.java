@@ -13,7 +13,7 @@ public class NormalizedTextSaveJob {
         this.service = service;
     }
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 10000)
     public void save() {
         service.save();
     }

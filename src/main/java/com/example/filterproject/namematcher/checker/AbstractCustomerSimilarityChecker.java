@@ -1,7 +1,7 @@
 package com.example.filterproject.namematcher.checker;
 
 import com.example.filterproject.namematcher.model.CheckResult;
-import com.example.filterproject.namematcher.model.RiskCustomer;
+import com.example.filterproject.namematcher.model.NormilizedCustomerData;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
@@ -21,14 +21,14 @@ public class AbstractCustomerSimilarityChecker implements CustomerChecker {
     private Double totalCoeff = 0.0;
 
     @Override
-    public CheckResult calculate(List<RiskCustomer> dbMatchList, RiskCustomer customerToCheck) {
+    public CheckResult calculate(List<NormilizedCustomerData> dbMatchList, NormilizedCustomerData customerToCheck) {
         List<CheckResult> checkResultList = new ArrayList<>();
         dbMatchList.forEach(foundCustomer -> checkResultList.add(calculate(foundCustomer, customerToCheck)));
         return Collections.max(checkResultList, Comparator.comparing(CheckResult::getTotalMatch));
     }
 
     @Override
-    public CheckResult calculate(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
+    public CheckResult calculate(NormilizedCustomerData foundCustomer, NormilizedCustomerData inputCustomer) {
         Double addressResult;
         Double nameResult;
         totalResult = 0.0;
@@ -52,7 +52,7 @@ public class AbstractCustomerSimilarityChecker implements CustomerChecker {
     }
 
     @Override
-    public Double checkAddressGroup(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
+    public Double checkAddressGroup(NormilizedCustomerData foundCustomer, NormilizedCustomerData inputCustomer) {
         Double result = 0.0;
         Double midResult;
         for (Map.Entry<String, Object> inputEntry : inputCustomer.getAddressMap().entrySet()) {
@@ -66,7 +66,7 @@ public class AbstractCustomerSimilarityChecker implements CustomerChecker {
     }
 
     @Override
-    public Double checkNameGroup(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
+    public Double checkNameGroup(NormilizedCustomerData foundCustomer, NormilizedCustomerData inputCustomer) {
         Double result = 0.0;
         Double midResult;
         for (Map.Entry<String, Object> inputEntry : inputCustomer.getNameMap().entrySet()) {
@@ -79,7 +79,7 @@ public class AbstractCustomerSimilarityChecker implements CustomerChecker {
         return Precision.round(result, 2);
     }
 
-    private void checkOthers(RiskCustomer foundCustomer, RiskCustomer inputCustomer) {
+    private void checkOthers(NormilizedCustomerData foundCustomer, NormilizedCustomerData inputCustomer) {
         for (Map.Entry<String, Object> inputEntry : inputCustomer.getOthersMap().entrySet()) {
             if (nonNull(inputEntry.getValue()) && nonNull(foundCustomer.getOthersMap().get(inputEntry.getKey()))) {
                 getMiddleResult(foundCustomer.getOthersMap(), inputEntry);

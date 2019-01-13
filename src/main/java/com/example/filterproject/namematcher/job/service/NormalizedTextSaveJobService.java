@@ -8,7 +8,6 @@ import com.example.filterproject.namematcher.model.RiskCustomer;
 import com.example.filterproject.namematcher.model.SystemProperty;
 import com.example.filterproject.namematcher.service.SystemPropertyService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -47,9 +46,13 @@ public class NormalizedTextSaveJobService {
             normalizedCustomerDataList.add(textFormatter.normalize(riskCustomer));
         });
         if (normalizedCustomerDataList.size() > 0) {
-            log.info("[{}] Trying to save {} entities - {}", this.getClass().getSimpleName(), normalizedCustomerDataList.size(), normalizedCustomerDataList.toString());
-            normilizedCustomerDataRepository.saveAll(normalizedCustomerDataList);
+            log.info("[{}] Trying to save {} entities - {}", getClass().getSimpleName(), normalizedCustomerDataList.size());
+            Integer savedCustomersCount = normilizedCustomerDataRepository.saveAll(normalizedCustomerDataList).size();
             saveOffset(normalizedCustomerDataList);
+            log.info("[{}] Saved {} customers", getClass().getSimpleName(), savedCustomersCount);
+        }
+        else {
+            log.info("[{}] Nothing left to migrate", getClass().getSimpleName());
         }
     }
 

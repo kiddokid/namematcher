@@ -35,4 +35,6 @@ public class CustomerService {
                 riskCustomer.getEmail(), riskCustomer.getAddress1(), riskCustomer.getAddress2(), riskCustomer.getCity(),
                 riskCustomer.getRegion_state(), riskCustomer.getZip());
     }
+
+
 }

@@ -1,17 +1,17 @@
 package com.example.filterproject.namematcher.service;
 
 import com.example.filterproject.namematcher.checker.CustomerChecker;
+import com.example.filterproject.namematcher.dao.NormilizedCustomerDataRepository;
+import com.example.filterproject.namematcher.dao.RiskCustomerRepository;
 import com.example.filterproject.namematcher.formatter.TextFormatter;
 import com.example.filterproject.namematcher.model.CheckResult;
+import com.example.filterproject.namematcher.model.NormilizedCustomerData;
 import com.example.filterproject.namematcher.model.RiskCustomer;
 import com.example.filterproject.namematcher.model.descision.DescisionName;
 import com.example.filterproject.namematcher.model.descision.ServiceDescision;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,31 +22,51 @@ import static com.example.filterproject.namematcher.checker.configuration.Checke
 @Slf4j
 public class NameMatcherService {
 
-    @Autowired
     private TextFormatter textFormatter;
-
-    @Autowired
     private CustomerService customerService;
+    private NormilizedCustomerDataRepository normilizedCustomerDataRepository;
+    private RiskCustomerRepository riskCustomerRepository;
+    private List<CustomerChecker> customerCheckerList;
+    private EmailMatcherService emailMatcherService;
 
-    @Autowired
-    private List<CustomerChecker> customerCheckerList = new ArrayList<>();
+    public NameMatcherService(TextFormatter textFormatter,
+                              CustomerService customerService,
+                              NormilizedCustomerDataRepository normilizedCustomerDataRepository,
+                              RiskCustomerRepository riskCustomerRepository,
+                              List<CustomerChecker> customerCheckerList,
+                              EmailMatcherService emailMatcherService) {
+        this.textFormatter = textFormatter;
+        this.customerService = customerService;
+        this.normilizedCustomerDataRepository = normilizedCustomerDataRepository;
+        this.riskCustomerRepository = riskCustomerRepository;
+        this.customerCheckerList = customerCheckerList;
+        this.emailMatcherService = emailMatcherService;
+    }
 
     public ServiceDescision process(RiskCustomer inputCustomer) {
+        Boolean isEmailMatch;
         inputCustomer = textFormatter.process(inputCustomer);
-        ServiceDescision serviceDescision = ServiceDescision.builder().
-                descisionName(DescisionName.NEGATIVE)
+        NormilizedCustomerData normalizedInputCustomer = textFormatter.normalize(inputCustomer);
+        ServiceDescision serviceDescision = ServiceDescision.builder()
+                .descisionName(DescisionName.NEGATIVE)
                 .build();
-        List<RiskCustomer> matchList = customerService.findSimilarCustomers(inputCustomer);
+        List<RiskCustomer> foundRiskCustomers = customerService.findSimilarCustomers(inputCustomer);
+        List<NormilizedCustomerData> matchList = normilizedCustomerDataRepository.findAllByRiskCustomerIdIn(
+                foundRiskCustomers.stream()
+                        .map(RiskCustomer::getId)
+                        .collect(Collectors.toList()));
+        isEmailMatch = emailMatcherService.match(foundRiskCustomers, inputCustomer.getEmail());
         log.info("[DYNAMIC-CHECKER] - Found {} possible matches", matchList.size());
         if (matchList.size() > 0) {
-            CheckResult checkResult = calculateAverageOfAllCheckers(matchList, inputCustomer);
+            CheckResult checkResult = calculateAverageOfAllCheckers(matchList, normalizedInputCustomer);
+            checkResult.setEmailMatch(isEmailMatch);
             return compareToThreshold(checkResult);
         }
         return serviceDescision;
     }
 
     private ServiceDescision compareToThreshold(CheckResult checkResult) {
-        if (checkResult.getTotalMatch() >= TOTAL_THRESHOLD) {
+        if (checkResult.getTotalMatch() >= TOTAL_THRESHOLD || checkResult.getEmailMatch()) {
             return ServiceDescision.builder()
                     .checkResult(checkResult)
                     .descisionName(DescisionName.MATCH)
@@ -60,7 +80,7 @@ public class NameMatcherService {
         return null;
     }
 
-    private CheckResult calculateAverageOfAllCheckers(List<RiskCustomer> matchList, RiskCustomer customerToCheck) {
+    private CheckResult calculateAverageOfAllCheckers(List<NormilizedCustomerData> matchList, NormilizedCustomerData customerToCheck) {
         CheckResult averageCheckResult = new CheckResult();
         List<CheckResult> allChecksResults = customerCheckerList.stream()
                 .map(checker -> checker.calculate(matchList, customerToCheck))
@@ -74,13 +94,14 @@ public class NameMatcherService {
                 .mapToDouble(CheckResult::getAddressMatch)
                 .average()
                 .getAsDouble());
-        averageCheckResult.setAddressMatch(allChecksResults.stream()
+        averageCheckResult.setTotalMatch(allChecksResults.stream()
                 .mapToDouble(CheckResult::getTotalMatch)
                 .average()
                 .getAsDouble());
-        averageCheckResult.setRiskCustomer(allChecksResults.stream()
-                .max(Comparator.comparing(CheckResult::getTotalMatch))
-                .get().getRiskCustomer());
+//        averageCheckResult.setRiskCustomer(allChecksResults.stream()
+//                .max(Comparator.comparing(CheckResult::getTotalMatch))
+//                .get()
+//                .getRiskCustomer());
         return averageCheckResult;
     }
 }

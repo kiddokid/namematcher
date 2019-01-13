@@ -8,10 +8,13 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 @Slf4j
-@Component
-public class NGramSimilarityCheckerImpl extends AbstractCustomerSimilarityChecker {
+public class NGramSimilarityChecker extends AbstractCustomerSimilarityChecker {
 
-    private ApacheNGramDistance nGramDistance = new ApacheNGramDistance();
+    private ApacheNGramDistance nGramDistance;
+
+    public NGramSimilarityChecker(ApacheNGramDistance nGramDistance) {
+        this.nGramDistance = nGramDistance;
+    }
 
     @Override
     public Double getMiddleResult(Map<String, Object> foundCustomerMap, Map.Entry<String, Object> inputEntrySet) {

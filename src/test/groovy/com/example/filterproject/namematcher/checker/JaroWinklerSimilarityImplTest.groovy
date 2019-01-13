@@ -2,6 +2,7 @@ package com.example.filterproject.namematcher.checker
 
 import com.example.filterproject.namematcher.checker.implementations.JaroWinklerSimilarityCheckerImpl
 import com.example.filterproject.namematcher.model.CheckResult
+import com.example.filterproject.namematcher.model.NormilizedCustomerData
 import com.example.filterproject.namematcher.model.RiskCustomer
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -60,15 +61,12 @@ class JaroWinklerSimilarityImplTest extends Specification {
 
     def "CheckNameGroup with different objects"() {
         given:
-        RiskCustomer inputCustomer = RiskCustomer.builder()
-                .firstName("Samuel")
-                .middleName("L")
-                .lastName("Jackson")
+        NormilizedCustomerData inputCustomer = NormilizedCustomerData.builder()
+                .name("samueljackson")
                 .build()
 
-        RiskCustomer foundCustomer = RiskCustomer.builder()
-                .firstName("Antonio")
-                .lastName("Jackson")
+        NormilizedCustomerData foundCustomer = NormilizedCustomerData.builder()
+                .name("antoniojackson")
                 .build()
 
         when:
@@ -76,23 +74,23 @@ class JaroWinklerSimilarityImplTest extends Specification {
         System.out.println(result)
 
         then:
-        assert result.nameMatch < 50
+        assert result.nameMatch < 65
     }
 
     def "CheckAddressGroup with different but similar objects"() {
         given:
-        RiskCustomer inputCustomer = RiskCustomer.builder()
+        NormilizedCustomerData inputCustomer = NormilizedCustomerData.builder()
                 .address1("address2")
-                .region_state("TX")
+                .region("TX")
                 .zip("12234")
                 .city("City")
                 .country("US")
                 .build()
 
-        RiskCustomer foundCustomer = RiskCustomer.builder()
+        NormilizedCustomerData foundCustomer = NormilizedCustomerData.builder()
                 .address1("address1")
                 .address2("address2")
-                .region_state("FL")
+                .region("FL")
                 .zip("12234")
                 .city("City")
                 .country("US")
@@ -108,25 +106,19 @@ class JaroWinklerSimilarityImplTest extends Specification {
 
     def "DynamicChecker with equals objects"() {
         given:
-        RiskCustomer inputCustomer = RiskCustomer.builder()
-                .firstName("Samuel")
-                .middleName("L")
-                .lastName("Jackson")
-                .email("email2@email.com")
+        NormilizedCustomerData inputCustomer = NormilizedCustomerData.builder()
+                .name("samueljackson")
                 .address1("address1")
-                .region_state("state")
+                .region("state")
                 .zip("12234")
                 .city("City")
                 .country("US")
                 .build()
 
-        RiskCustomer foundCustomer = RiskCustomer.builder()
-                .firstName("Samuel")
-                .middleName("L")
-                .lastName("Jackson")
-                .email("email2@email.com")
+        NormilizedCustomerData foundCustomer = NormilizedCustomerData.builder()
+                .name("samueljackson")
                 .address1("address1")
-                .region_state("state")
+                .region("state")
                 .zip("12234")
                 .city("City")
                 .country("US")

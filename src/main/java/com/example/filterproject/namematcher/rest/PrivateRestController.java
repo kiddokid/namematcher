@@ -29,34 +29,9 @@ public class PrivateRestController {
         this.customerService = customerService;
     }
 
-    @Validated
-    @GetMapping("/match") // TODO: REWRITE TO POST
-    public ResponseEntity matchCustomer(@RequestParam("firstName") String firstName, @RequestParam("middleName") Optional<String> middleName,
-                                        @RequestParam("lastName") String lastName, @RequestParam("email") String email,
-                                        @RequestParam("address1") String address1, @RequestParam("address2") Optional<String> address2,
-                                        @RequestParam("region_state") String region_state, @RequestParam("city") String city,
-                                        @RequestParam("zip") String zip, @RequestParam("country") String country) {
-        log.info("Incoming Request");
-        RiskCustomer riskCustomer = RiskCustomer.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .middleName(middleName.orElse(null))
-                .email(email)
-                .address1(address1)
-                .address2(address2.orElse(null))
-                .region_state(region_state)
-                .city(city)
-                .zip(zip)
-                .country(country)
-                .build();
-        ServiceDescision serviceDescision = matcherService.process(riskCustomer);
-        return new ResponseEntity(serviceDescision, HttpStatus.OK);
-    }
-
-    @PostMapping("/matchp")
+    @PostMapping("/match")
     public ResponseEntity<ServiceDescision> matchCustomerPost(@RequestBody RiskCustomer riskCustomer) {
         ServiceDescision serviceDescision = matcherService.process(riskCustomer);
-        System.out.println(serviceDescision);
         return new ResponseEntity<>(serviceDescision, HttpStatus.OK);
     }
 

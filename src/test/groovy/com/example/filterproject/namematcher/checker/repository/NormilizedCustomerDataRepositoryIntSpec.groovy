@@ -54,4 +54,46 @@ class NormilizedCustomerDataRepositoryIntSpec extends BaseIntegrationTest {
         NormilizedCustomerData result = repository.findByRiskCustomerId(123)
         assert result.getRiskCustomerId() == 123
     }
+
+    def "findAllByRiskCustomerIds return correct result"() {
+        NormilizedCustomerData data1 = NormilizedCustomerData.builder()
+                .riskCustomerId(123)
+                .name("abc dfc")
+                .address1("address str1")
+                .address2("address2 str2")
+                .region("region")
+                .city("city")
+                .zip("100234")
+                .country("PL")
+                .build()
+        NormilizedCustomerData data2 = NormilizedCustomerData.builder()
+                .riskCustomerId(124)
+                .name("abc dfc")
+                .address1("address str1")
+                .address2("address2 str2")
+                .region("region")
+                .city("city")
+                .zip("100234")
+                .country("PL")
+                .build()
+        NormilizedCustomerData data3 = NormilizedCustomerData.builder()
+                .riskCustomerId(125)
+                .name("abc dfc")
+                .address1("address str1")
+                .address2("address2 str2")
+                .region("region")
+                .city("city")
+                .zip("100234")
+                .country("PL")
+                .build()
+        repository.saveAll([data1, data2, data3])
+
+        when:
+        List<NormilizedCustomerData> normilizedCustomerDataList = repository.findAllByRiskCustomerIdIn([123L, 125L])
+
+        then:
+        assert normilizedCustomerDataList.size() == 2
+        assert normilizedCustomerDataList.any {it.getRiskCustomerId() == 123}
+        assert normilizedCustomerDataList.any {it.getRiskCustomerId() == 125}
+    }
 }

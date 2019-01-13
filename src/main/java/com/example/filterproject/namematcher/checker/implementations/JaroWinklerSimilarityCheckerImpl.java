@@ -17,8 +17,8 @@ public class JaroWinklerSimilarityCheckerImpl extends AbstractCustomerSimilarity
 
     @Override
     public Double getMiddleResult(Map<String, Object> foundCustomerMap, Map.Entry<String, Object> inputEntrySet) {
-        Double midResult = jaroWinklerDistance.apply(inputEntrySet.getValue().toString().toLowerCase(),
-                foundCustomerMap.get(inputEntrySet.getKey()).toString().toLowerCase());
+        Double midResult = jaroWinklerDistance.apply(inputEntrySet.getValue().toString(),
+                foundCustomerMap.get(inputEntrySet.getKey()).toString());
         this.setTotalResult(this.getTotalResult() + (midResult * this.getTotalCoeff()));
         return midResult;
     }

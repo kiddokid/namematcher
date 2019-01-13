@@ -432,7 +432,7 @@ public class TextFormatter {
             for (String value : words) {
                 builder.append(value);
             }
-            return builder.toString();
+            return builder.toString().replace(" ", "");
         } else return "";
     }
 }
