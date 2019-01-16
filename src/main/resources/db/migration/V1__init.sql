@@ -26,25 +26,25 @@ create table if not exists namematching.risk_customers
 	rp_added_by_id bigint
 )
 ;
---
--- create table if not exists  namematching.vkuser
--- (
--- 	id serial not null
--- 		constraint vkusers_pkey
--- 			primary key,
--- 	riskcustomerid bigint not null,
--- 	possibleids INTEGER[],
--- 	preferableid INTEGER ,
--- 	totalfriendscount integer,
--- 	friends INTEGER[],
--- 	date_created timestamp with time zone default now() not null,
--- 	date_modified timestamp with time zone default now() not null
--- )
--- ;
---
--- create index if not exists  vkusers_idx_possibleids
--- 	on namematching.vkuser (possibleids)
--- ;
+
+create table if not exists  namematching.vkuser
+(
+	id serial not null
+		constraint vkusers_pkey
+			primary key,
+	riskcustomerid bigint not null,
+	possibleids INTEGER[],
+	preferableid INTEGER ,
+	totalfriendscount integer,
+	friends INTEGER[],
+	date_created timestamp with time zone default now() not null,
+	date_modified timestamp with time zone default now() not null
+)
+;
+
+create index if not exists  vkusers_idx_possibleids
+	on namematching.vkuser (possibleids)
+;
 
 
 create table if not exists namematching.normilized_customer_data

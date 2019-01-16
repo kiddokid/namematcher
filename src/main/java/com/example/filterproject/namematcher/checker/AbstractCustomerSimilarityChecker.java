@@ -55,9 +55,6 @@ public class AbstractCustomerSimilarityChecker implements CustomerChecker {
     public Double checkAddressGroup(NormilizedCustomerData foundCustomer, NormilizedCustomerData inputCustomer) {
         Double result = 0.0;
         Double midResult;
-        if (!isPresentAndValid(inputCustomer.getAddress1())) {
-            return result;
-        }
         for (Map.Entry<String, Object> inputEntry : inputCustomer.getAddressMap().entrySet()) {
             if (nonNull(inputEntry.getValue()) && nonNull(foundCustomer.getAddressMap().get(inputEntry.getKey()))) {
                 midResult = getMiddleResult(foundCustomer.getAddressMap(), inputEntry);
@@ -72,9 +69,6 @@ public class AbstractCustomerSimilarityChecker implements CustomerChecker {
     public Double checkNameGroup(NormilizedCustomerData foundCustomer, NormilizedCustomerData inputCustomer) {
         Double result = 0.0;
         Double midResult;
-        if (!isPresentAndValid(inputCustomer.getName())) {
-            return result;
-        }
         for (Map.Entry<String, Object> inputEntry : inputCustomer.getNameMap().entrySet()) {
             if (nonNull(inputEntry.getValue()) && nonNull(foundCustomer.getNameMap().get(inputEntry.getKey()))) {
                 midResult = getMiddleResult(foundCustomer.getNameMap(), inputEntry);
@@ -105,14 +99,5 @@ public class AbstractCustomerSimilarityChecker implements CustomerChecker {
 
     public Double getMiddleResult(Map<String, Object> foundCustomerMap, Map.Entry<String, Object> inputEntrySet) {
         return null;
-    }
-
-    public boolean isPresentAndValid(String string) {
-        if (nonNull(string)) {
-            if (!string.isEmpty()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

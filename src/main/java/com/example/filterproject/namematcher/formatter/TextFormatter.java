@@ -24,12 +24,10 @@ public class TextFormatter {
         return result;
     }
 
-    private RiskCustomer  processCountryAndState(RiskCustomer riskCustomer) {
-        if (riskCustomer.getCountry() != null) {
-            riskCustomer.setCountry(countryToCode(riskCustomer.getCountry()));
-            if (isUS(riskCustomer)) {
-                riskCustomer.setRegion_state(stateToCodeUs(riskCustomer.getRegion_state()));
-            }
+    private RiskCustomer processCountryAndState(RiskCustomer riskCustomer) {
+        riskCustomer.setCountry(countryToCode(riskCustomer.getCountry()));
+        if (isUS(riskCustomer)) {
+            riskCustomer.setRegion_state(stateToCodeUs(riskCustomer.getRegion_state()));
         }
         return riskCustomer;
     }
@@ -381,7 +379,7 @@ public class TextFormatter {
     }
 
     private String clearAddressSafely(String address) {
-        if (address != null) {
+        if (!address.isEmpty()) {
             String[] insideKeyWords = {" str\\.", " ave ", " ave\\.", " suite "};
             String[] endsKeyWords = {" st", " st.", " street.", " street", " str", " road"};
             String result = address.toLowerCase();
@@ -416,8 +414,7 @@ public class TextFormatter {
     public NormilizedCustomerData normalize(RiskCustomer riskCustomer) {
         return NormilizedCustomerData.builder()
                 .riskCustomerId(riskCustomer.getId())
-                .name(normalize((riskCustomer.getFirstName() != null ? riskCustomer.getFirstName() : "")
-                        + " " + (riskCustomer.getLastName() != null ? riskCustomer.getLastName() : "")))
+                .name(normalize(riskCustomer.getFirstName() + " " + riskCustomer.getLastName()))
                 .address1(normalize(riskCustomer.getAddress1()))
                 .address2(normalize(riskCustomer.getAddress2()))
                 .region(normalize(riskCustomer.getRegion_state()))
