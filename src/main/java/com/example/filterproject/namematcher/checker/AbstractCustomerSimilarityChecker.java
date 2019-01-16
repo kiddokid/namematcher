@@ -107,7 +107,7 @@ public class AbstractCustomerSimilarityChecker implements CustomerChecker {
         return null;
     }
 
-    public boolean isPresentAndValid(String string) {
+    private boolean isPresentAndValid(String string) {
         if (nonNull(string)) {
             if (!string.isEmpty()) {
                 return true;
