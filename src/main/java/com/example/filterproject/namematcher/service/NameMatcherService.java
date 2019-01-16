@@ -46,7 +46,6 @@ public class NameMatcherService {
     public ServiceDescision process(RiskCustomer inputCustomer) {
         Boolean isEmailMatch;
         inputCustomer = textFormatter.process(inputCustomer);
-        NormilizedCustomerData normalizedInputCustomer = textFormatter.normalize(inputCustomer);
         ServiceDescision serviceDescision = ServiceDescision.builder()
                 .descisionName(DescisionName.NEGATIVE)
                 .build();
@@ -55,9 +54,11 @@ public class NameMatcherService {
                 foundRiskCustomers.stream()
                         .map(RiskCustomer::getId)
                         .collect(Collectors.toList()));
+        //EMAIL
         isEmailMatch = emailMatcherService.match(foundRiskCustomers, inputCustomer.getEmail());
         log.info("[DYNAMIC-CHECKER] - Found {} possible matches", matchList.size());
         if (matchList.size() > 0) {
+            NormilizedCustomerData normalizedInputCustomer = textFormatter.normalize(inputCustomer);
             CheckResult checkResult = calculateAverageOfAllCheckers(matchList, normalizedInputCustomer);
             checkResult.setEmailMatch(isEmailMatch);
             return compareToThreshold(checkResult);

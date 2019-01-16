@@ -8,9 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@Component
 @Slf4j
-@Getter
+@Component
 public class JaroWinklerSimilarityCheckerImpl extends AbstractCustomerSimilarityChecker {
 
     private JaroWinklerDistance jaroWinklerDistance = new JaroWinklerDistance();
@@ -22,9 +21,4 @@ public class JaroWinklerSimilarityCheckerImpl extends AbstractCustomerSimilarity
         this.setTotalResult(this.getTotalResult() + (midResult * this.getTotalCoeff()));
         return midResult;
     }
-
-
-
-
-
 }
