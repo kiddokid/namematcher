@@ -26,7 +26,7 @@ create table if not exists namematching.risk_customers
 	rp_added_by_id bigint
 )
 ;
---
+
 create table if not exists  namematching.vkuser
 (
 	id serial not null
